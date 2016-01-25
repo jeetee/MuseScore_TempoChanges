@@ -12,6 +12,6 @@ This plugin uses the hidden tempo texts technique to simulate linear tempo chang
 ### Download and Install
 https://github.com/jeetee/MuseScore_TempoChanges/archive/1.0.zip
 
-For installation see [Plugins](https://musescore.org/en/handbook/plugins).
+For installation see [Plugins](https://musescore.org/en/handbook/plugins-0).
 
 Tested with MuseScore 2.0.2, should work on 2.0+
