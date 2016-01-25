@@ -4,7 +4,7 @@
 //  Based on the principle of hidden tempo markings mentioned in the 2.0 handbook
 //  Attempts to create a linear ritartando or accelerando
 //
-//  Copyright (2016) Johan Temmerman (jeetee)
+//  Copyright (C) 2016 Johan Temmerman (jeetee)
 //=============================================================================
 import QtQuick 2.2
 import QtQuick.Controls 1.1
@@ -14,7 +14,7 @@ import MuseScore 1.0
 
 MuseScore {
       menuPath: "Plugins.TempoChanges"
-      version: "0.3"
+      version: "0.4"
       description: qsTr("Creates linear hidden tempo markers.\nSee also: https://musescore.org/en/handbook/tempo-0#ritardando-accelerando")
       pluginType: "dialog"
       //requiresScore: true //not supported before 2.1.0, manual checking onRun
@@ -129,7 +129,7 @@ MuseScore {
                   anchors.margins: 10
 
                   Label {
-                        text: qsTr("Start text: ")
+                        text: qsTranslate("Ms::MuseScore", "Staff Text") + ": "
                   }
                   TextField {
                         id: startTextValue
