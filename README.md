@@ -10,7 +10,7 @@ This plugin uses the hidden tempo texts technique to simulate linear tempo chang
 3. Hit `Apply`. The plugin will now create invisible tempo texts on each segment within the selection and a final visible one on the first note after the selection with the resulting end tempo.
 
 ### Download and Install
-https://github.com/jeetee/MuseScore_TempoChanges/1.0/master.zip
+https://github.com/jeetee/MuseScore_TempoChanges/archive/1.0.zip
 
 For installation see [Plugins](https://musescore.org/en/handbook/plugins).
 
