@@ -1,0 +1,54 @@
+/*******************************************************************************
+overrides by jeetee over the original Slate Theme for GitHub Pages
+*******************************************************************************/
+figure img {
+	vertical-align: top;
+}
+
+/*******************************************************************************
+Full-Width Styles
+*******************************************************************************/
+#header_wrap .inner {
+  padding-top: 0;
+}
+
+#project_tagline {
+  padding-bottom: 0;
+  margin: 0;
+}
+
+#downloads {
+  bottom: -33px;
+}
+
+#main_content {
+  padding-top: 0;
+}
+
+footer.inner {
+  padding: 0 1em;
+}
+footer p {
+  margin: 0;
+  font-size: 70%;
+}
+
+/*******************************************************************************
+Small Device Styles
+*******************************************************************************/
+@media screen and (max-width: 600px) {
+  #main_content {
+    padding-top: 1em;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #downloads {
+    display: block;
+	/*transform: scale(0.8);*/
+  }
+
+  #main_content {
+    padding-top: 1em;
+  }
+}
