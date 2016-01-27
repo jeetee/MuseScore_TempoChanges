@@ -16,7 +16,7 @@ Plugin Dialog and resulting score fragment
 ![Applying the Plugin](http://jeetee.github.io/MuseScore_TempoChanges/images/applying_plugin.png) ![Result](http://jeetee.github.io/MuseScore_TempoChanges/images/plugin_result.png)
 
 ### Download and Install
-https://github.com/jeetee/MuseScore_TempoChanges/archive/2.0.zip
+https://github.com/jeetee/MuseScore_TempoChanges/archive/2.1.zip
 
 For installation see [Plugins](https://musescore.org/en/handbook/plugins-0).
 
