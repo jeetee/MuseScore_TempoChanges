@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Musescore TempoChanges : MuseScore (https://musescore.org) plugin applying linear Tempo changes such as accelerando and ritardando.">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Musescore TempoChanges</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/jeetee/MuseScore_TempoChanges">View on GitHub</a>
+
+          <h1 id="project_title">Musescore TempoChanges</h1>
+          <h2 id="project_tagline">MuseScore (https://musescore.org) plugin applying linear Tempo changes such as accelerando and ritardando.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/jeetee/MuseScore_TempoChanges/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/jeetee/MuseScore_TempoChanges/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="musescore-tempochanges" class="anchor" href="#musescore-tempochanges" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>MuseScore TempoChanges</h1>
+
+<p>This plugin uses the hidden tempo texts technique to simulate linear tempo changes such as accelerando and ritradando in <a href="https://musescore.org">MuseScore</a>. The technique itself is taken straight out of <a href="https://musescore.org/en/handbook/tempo-0#ritardando-accelerando">the online handbook</a>.</p>
+
+<h3>
+<a id="how-does-it-work" class="anchor" href="#how-does-it-work" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How does it work?</h3>
+
+<ol>
+<li>Select the range of notes over which the tempo change has to take place</li>
+<li>Open up the plugin from <code>Plugins &gt; TempoChanges</code>
+
+<ul>
+<li>
+<strong>Staff Text:</strong> Optional staff text to be created at the start of the tempo change. Leave blank if undesired.</li>
+<li>
+<strong>Start BPM:</strong> Tempo of the first note in the selection (base beat = 1/4th note)</li>
+<li>
+<strong>End BPM:</strong> Tempo of the first note <em>after</em> the selection (base beat = 1/4th note)</li>
+</ul>
+</li>
+<li>Hit <code>Apply</code>. The plugin will now create invisible tempo texts on each segment within the selection and a final visible one on the first note after the selection with the resulting end tempo.</li>
+</ol>
+
+<h3>
+<a id="download-and-install" class="anchor" href="#download-and-install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Download and Install</h3>
+
+<p><a href="https://github.com/jeetee/MuseScore_TempoChanges/archive/1.0.zip">https://github.com/jeetee/MuseScore_TempoChanges/archive/1.0.zip</a></p>
+
+<p>For installation see <a href="https://musescore.org/en/handbook/plugins-0">Plugins</a>.</p>
+
+<p>Tested with MuseScore 2.0.2, should work on 2.0+</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Musescore TempoChanges maintained by <a href="https://github.com/jeetee">jeetee</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
