@@ -15,7 +15,7 @@ import MuseScore 1.0
 
 MuseScore {
       menuPath: "Plugins.TempoChanges"
-      version: "2.0"
+      version: "2.1"
       description: qsTr("Creates linear hidden tempo markers.\nSee also: https://musescore.org/en/handbook/tempo-0#ritardando-accelerando")
       pluginType: "dialog"
       //requiresScore: true //not supported before 2.1.0, manual checking onRun
@@ -40,8 +40,8 @@ MuseScore {
             var durationTicks = sel.end - sel.start;
 
             var beatBaseItem = beatBase.model.get(beatBase.currentIndex);
-            var startTempo = getTempoFromInput(startBPMvalue) / beatBaseItem.div;
-            var endTempo = getTempoFromInput(endBPMvalue) / beatBaseItem.div;
+            var startTempo = getTempoFromInput(startBPMvalue) * beatBaseItem.mult;
+            var endTempo = getTempoFromInput(endBPMvalue) * beatBaseItem.mult;
             var tempoRange = (endTempo - startTempo);
             console.log('Applying to selection [' + sel.start + ', ' + sel.end + '] = ' + durationTicks);
             console.log(startTempo + ' (' + (startTempo*60) + ') -> ' + endTempo + ' (' + (endTempo*60) + ') = ' + tempoRange);
@@ -127,7 +127,7 @@ MuseScore {
                   tempoElement = newElement(Element.TEMPO_TEXT);
                   addTempo = true;
             }
-            tempoElement.text = beatBaseItem.sym + ' = ' + Math.round(tempo * 60 * beatBaseItem.div);
+            tempoElement.text = beatBaseItem.sym + ' = ' + Math.round(tempo * 60 / beatBaseItem.mult);
             tempoElement.visible = visible;
             if (addTempo) {
                   cursor.add(tempoElement);
@@ -162,21 +162,21 @@ MuseScore {
                         id: beatBase
                         model: ListModel {
                               id: beatBaseList
-                              //div is a tempo-divider compared to a crotchet      
-                              //ListElement { text: '\uE1D0';               div: 8     ; sym: '<sym>metNoteDoubleWhole</sym>' } // 2/1
-                              ListElement { text: '\uE1D2';               div: 4     ; sym: '<sym>metNoteWhole</sym>' } // 1/1
-                              //ListElement { text: '\uE1D3 \uE1E7 \uE1E7'; div: 3.5   ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/2..
-                              ListElement { text: '\uE1D3 \uE1E7';        div: 3     ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym>' } // 1/2.
-                              ListElement { text: '\uE1D3';               div: 2     ; sym: '<sym>metNoteHalfUp</sym>' } // 1/2
-                              ListElement { text: '\uE1D5 \uE1E7 \uE1E7'; div: 1.75  ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/4..
-                              ListElement { text: '\uE1D5 \uE1E7';        div: 1.5   ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym>' } // 1/4.
-                              ListElement { text: '\uE1D5';               div: 1     ; sym: '<sym>metNoteQuarterUp</sym>' } // 1/4
-                              ListElement { text: '\uE1D7 \uE1E7 \uE1E7'; div: 0.875 ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/8..
-                              ListElement { text: '\uE1D7 \uE1E7';        div: 0.75  ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym>' } // 1/8.
-                              ListElement { text: '\uE1D7';               div: 0.5   ; sym: '<sym>metNote8thUp</sym>' } // 1/8
-                              ListElement { text: '\uE1D9 \uE1E7 \uE1E7'; div: 0.4375; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } //1/16..
-                              ListElement { text: '\uE1D9 \uE1E7';        div: 0.375 ; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym>' } //1/16.
-                              ListElement { text: '\uE1D9';               div: 0.25  ; sym: '<sym>metNote16thUp</sym>' } //1/16
+                              //mult is a tempo-multiplier compared to a crotchet      
+                              //ListElement { text: '\uE1D0';               mult: 8     ; sym: '<sym>metNoteDoubleWhole</sym>' } // 2/1
+                              ListElement { text: '\uE1D2';               mult: 4     ; sym: '<sym>metNoteWhole</sym>' } // 1/1
+                              //ListElement { text: '\uE1D3 \uE1E7 \uE1E7'; mult: 3.5   ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/2..
+                              ListElement { text: '\uE1D3 \uE1E7';        mult: 3     ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym>' } // 1/2.
+                              ListElement { text: '\uE1D3';               mult: 2     ; sym: '<sym>metNoteHalfUp</sym>' } // 1/2
+                              ListElement { text: '\uE1D5 \uE1E7 \uE1E7'; mult: 1.75  ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/4..
+                              ListElement { text: '\uE1D5 \uE1E7';        mult: 1.5   ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym>' } // 1/4.
+                              ListElement { text: '\uE1D5';               mult: 1     ; sym: '<sym>metNoteQuarterUp</sym>' } // 1/4
+                              ListElement { text: '\uE1D7 \uE1E7 \uE1E7'; mult: 0.875 ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/8..
+                              ListElement { text: '\uE1D7 \uE1E7';        mult: 0.75  ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym>' } // 1/8.
+                              ListElement { text: '\uE1D7';               mult: 0.5   ; sym: '<sym>metNote8thUp</sym>' } // 1/8
+                              ListElement { text: '\uE1D9 \uE1E7 \uE1E7'; mult: 0.4375; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } //1/16..
+                              ListElement { text: '\uE1D9 \uE1E7';        mult: 0.375 ; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym>' } //1/16.
+                              ListElement { text: '\uE1D9';               mult: 0.25  ; sym: '<sym>metNote16thUp</sym>' } //1/16
                         }
                         currentIndex: 5
                         implicitHeight: 42
