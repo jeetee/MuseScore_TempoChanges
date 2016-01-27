@@ -4,7 +4,7 @@
 <context>
     <name>Ms::MuseScore</name>
     <message>
-        <location filename="../TempoChanges.qml" line="+132"/>
+        <location filename="../TempoChanges.qml" line="+134"/>
         <source>Staff Text</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12,7 +12,7 @@
 <context>
     <name>PrefsDialogBase</name>
     <message>
-        <location line="+31"/>
+        <location line="+64"/>
         <source>Apply</source>
         <translation type="unfinished"></translation>
     </message>
@@ -20,7 +20,7 @@
 <context>
     <name>QMessageBox</name>
     <message>
-        <location line="-136"/>
+        <location line="-170"/>
         <source>No score open.
 This plugin requires an open score to run.
 </source>
@@ -38,7 +38,12 @@ See also: https://musescore.org/en/handbook/tempo-0#ritardando-accelerando</sour
 Zie ook: https://musescore.org/nl/handboek/tempo-0</translation>
     </message>
     <message>
-        <location line="+123"/>
+        <location line="+124"/>
+        <source>BPM beat: </source>
+        <translation>BPM tel: </translation>
+    </message>
+    <message>
+        <location line="+33"/>
         <source>Start BPM: </source>
         <translation>Begin BPM: </translation>
     </message>

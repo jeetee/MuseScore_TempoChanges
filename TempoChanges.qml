@@ -8,6 +8,7 @@
 //=============================================================================
 import QtQuick 2.2
 import QtQuick.Controls 1.1
+import QtQuick.Controls.Styles 1.3
 import QtQuick.Layouts 1.1
 
 import MuseScore 1.0
@@ -53,17 +54,18 @@ MuseScore {
 
             var startTick = cursor.tick;
             var durationTicks = endTick - startTick;
-            console.log(durationTicks);
+
+            var beatBaseItem = beatBase.model.get(beatBase.currentIndex);
             var startTempo = startBPMvalue.text;
             if (startTempo == "") {
                   startTempo = startBPMvalue.placeholderText;
             }
-            startTempo = parseInt(startTempo) / 60;
+            startTempo = parseInt(startTempo) / 60 / beatBaseItem.div;
             var endTempo = endBPMvalue.text;
             if (endTempo == "") {
                   endTempo = endBPMvalue.placeholderText;
             }
-            endTempo = parseInt(endTempo) / 60;
+            endTempo = parseInt(endTempo) / 60 / beatBaseItem.div;
             var tempoRange = (endTempo - startTempo);
             console.log('Applying to selection [' + startTick + ', ' + endTick + '] = ' + durationTicks);
             console.log(startTempo + ' (' + (startTempo*60) + ') -> ' + endTempo + ' (' + (endTempo*60) + ') = ' + tempoRange);
@@ -79,12 +81,12 @@ MuseScore {
             while (cursor.segment && (cursor.tick < endTick)) {
                   //linear interpolation of the desired tempo
                   var newTempo = ((cursor.tick - startTick) / durationTicks * tempoRange) + startTempo;
-                  applyTempoToSegment(newTempo, cursor, false);
+                  applyTempoToSegment(newTempo, cursor, false, beatBaseItem);
                   cursor.next();
             }
             //processed selection, now end at new tempo with a visible element
             if (cursor.segment) { //but only if there still is an element availble
-                  applyTempoToSegment(endTempo, cursor, true);
+                  applyTempoToSegment(endTempo, cursor, true, beatBaseItem);
             }
             curScore.endCmd(false);
       }
@@ -100,7 +102,7 @@ MuseScore {
             return undefined; //invalid - no tempo text found
       }
 
-      function applyTempoToSegment(tempo, cursor, visible)
+      function applyTempoToSegment(tempo, cursor, visible, beatBaseItem)
       {
             console.log('Applying new tempo: ' + tempo);
             var tempoElement = findExistingTempoElement(cursor.segment);
@@ -109,7 +111,7 @@ MuseScore {
                   tempoElement = newElement(Element.TEMPO_TEXT);
                   addTempo = true;
             }
-            tempoElement.text = '<sym>metNoteQuarterUp</sym> = ' + Math.round(tempo * 60);
+            tempoElement.text = beatBaseItem.sym + ' = ' + Math.round(tempo * 60 * beatBaseItem.div);
             tempoElement.visible = visible;
             if (addTempo) {
                   cursor.add(tempoElement);
@@ -135,6 +137,39 @@ MuseScore {
                         id: startTextValue
                         placeholderText: 'rit. / accel.'
                         implicitHeight: 24
+                  }
+
+                  Label {
+                        text: qsTr("BPM beat: ")
+                  }
+                  ComboBox {
+                        id: beatBase
+                        model: ListModel {
+                              id: beatBaseList
+                              //div is a tempo-divider compared to a crotchet      
+                              //ListElement { text: '\uE1D0';               div: 8     ; sym: '<sym>metNoteDoubleWhole</sym>' } // 2/1
+                              ListElement { text: '\uE1D2';               div: 4     ; sym: '<sym>metNoteWhole</sym>' } // 1/1
+                              //ListElement { text: '\uE1D3 \uE1E7 \uE1E7'; div: 3.5   ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/2..
+                              ListElement { text: '\uE1D3 \uE1E7';        div: 3     ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym>' } // 1/2.
+                              ListElement { text: '\uE1D3';               div: 2     ; sym: '<sym>metNoteHalfUp</sym>' } // 1/2
+                              ListElement { text: '\uE1D5 \uE1E7 \uE1E7'; div: 1.75  ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/4..
+                              ListElement { text: '\uE1D5 \uE1E7';        div: 1.5   ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym>' } // 1/4.
+                              ListElement { text: '\uE1D5';               div: 1     ; sym: '<sym>metNoteQuarterUp</sym>' } // 1/4
+                              ListElement { text: '\uE1D7 \uE1E7 \uE1E7'; div: 0.875 ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/8..
+                              ListElement { text: '\uE1D7 \uE1E7';        div: 0.75  ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym>' } // 1/8.
+                              ListElement { text: '\uE1D7';               div: 0.5   ; sym: '<sym>metNote8thUp</sym>' } // 1/8
+                              ListElement { text: '\uE1D9 \uE1E7 \uE1E7'; div: 0.4375; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } //1/16..
+                              ListElement { text: '\uE1D9 \uE1E7';        div: 0.375 ; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym>' } //1/16.
+                              ListElement { text: '\uE1D9';               div: 0.25  ; sym: '<sym>metNote16thUp</sym>' } //1/16
+                        }
+                        currentIndex: 5
+                        implicitHeight: 42
+                        style: ComboBoxStyle {
+                              font.family: 'MScore Text'
+                              font.pointSize: 18
+                              padding.top: 5
+                              padding.bottom: -10
+                        }
                   }
 
                   Label {
