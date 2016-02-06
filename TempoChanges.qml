@@ -24,7 +24,7 @@ MuseScore {
       height: 240
 
       onRun: {
-            if (typeof curScore === 'undefined') {
+            if (!curScore) {
                   console.log(qsTranslate("QMessageBox", "No score open.\nThis plugin requires an open score to run.\n"));
                   Qt.quit();
             }
