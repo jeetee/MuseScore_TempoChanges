@@ -103,7 +103,7 @@ MuseScore {
             if (tempo == "") {
                   tempo = input.placeholderText;
             }
-            tempo = parseInt(tempo) / 60;
+            tempo = parseFloat(tempo) / 60;
             return tempo;
       }
 
@@ -127,13 +127,14 @@ MuseScore {
                   tempoElement = newElement(Element.TEMPO_TEXT);
                   addTempo = true;
             }
-            tempoElement.text = beatBaseItem.sym + ' = ' + Math.round(tempo * 60 / beatBaseItem.mult);
+            var beatBaseTempo = Math.round(tempo * 60 / beatBaseItem.mult * 10) / 10; // to 1 decimal place
+            tempoElement.text = beatBaseItem.sym + ' = ' + beatBaseTempo;
             tempoElement.visible = visible;
             if (addTempo) {
                   cursor.add(tempoElement);
             }
             //changing of tempo can only happen after being added to the segment
-            tempoElement.tempo = tempo;
+            tempoElement.tempo = beatBaseTempo / 60; //real tempo setting according to followText
             tempoElement.followText = true; //allows for manual fiddling by the user afterwards
       }
 
@@ -194,7 +195,7 @@ MuseScore {
                   TextField {
                         id: startBPMvalue
                         placeholderText: '120'
-                        validator: IntValidator { bottom: 1;/* top: 512;*/}
+                        validator: DoubleValidator { bottom: 1;/* top: 512;*/ decimals: 1; notation: DoubleValidator.StandardNotation; }
                         implicitHeight: 24
                   }
 
@@ -204,7 +205,7 @@ MuseScore {
                   TextField {
                         id: endBPMvalue
                         placeholderText: '60'
-                        validator: IntValidator { bottom: 1;/* top: 512;*/}
+                        validator: DoubleValidator { bottom: 1;/* top: 512;*/ decimals: 1; notation: DoubleValidator.StandardNotation; }
                         implicitHeight: 24
                   }
 
