@@ -48,6 +48,7 @@ MuseScore {
 
             var cursor = curScore.newCursor();
             cursor.rewind(1); //start of selection
+            var tempoTracker = {}; //tracker to ensure only one marking is created per 0.1 tempo changes
 
             curScore.startCmd();
             //add indicative text if required
@@ -57,16 +58,23 @@ MuseScore {
                   cursor.add(startText);
             }
 
-            while (cursor.segment && (cursor.tick < sel.end)) {
-                  //linear interpolation of the desired tempo
-                  var newTempo = ((cursor.tick - sel.start) / durationTicks * tempoRange) + startTempo;
-                  applyTempoToSegment(newTempo, cursor, false, beatBaseItem);
-                  cursor.next();
+            for (var trackIdx = 0; trackIdx < cursor.score.ntracks; ++trackIdx) {
+                  cursor.rewind(1);
+                  cursor.track = trackIdx;
+
+                  while (cursor.segment && (cursor.tick < sel.end)) {
+                        //linear interpolation of the desired tempo
+                        var newTempo = ((cursor.tick - sel.start) / durationTicks * tempoRange) + startTempo;
+                        applyTempoToSegment(newTempo, cursor, false, beatBaseItem, tempoTracker);
+                        cursor.next();
+                  }
+
+                  //processed selection, now end at new tempo with a visible element
+                  if (cursor.segment) { //but only if there still is an element availble
+                        applyTempoToSegment(endTempo, cursor, true, beatBaseItem);
+                  }
             }
-            //processed selection, now end at new tempo with a visible element
-            if (cursor.segment) { //but only if there still is an element availble
-                  applyTempoToSegment(endTempo, cursor, true, beatBaseItem);
-            }
+
             curScore.endCmd(false);
       }
 
@@ -118,16 +126,22 @@ MuseScore {
             return undefined; //invalid - no tempo text found
       }
 
-      function applyTempoToSegment(tempo, cursor, visible, beatBaseItem)
+      function applyTempoToSegment(tempo, cursor, visible, beatBaseItem, tempoTracker)
       {
-            console.log('Applying new tempo: ' + tempo);
+            var beatBaseTempo = Math.round(tempo * 60 / beatBaseItem.mult * 10) / 10; // to 1 decimal place
             var tempoElement = findExistingTempoElement(cursor.segment);
             var addTempo = false;
             if (tempoElement === undefined) {
-                  tempoElement = newElement(Element.TEMPO_TEXT);
-                  addTempo = true;
+                  if (!tempoTracker || (tempoTracker && !tempoTracker[beatBaseTempo])) { //only create new element for tempo if tempo wasn't added yet
+                        tempoElement = newElement(Element.TEMPO_TEXT);
+                        addTempo = true;
+                  }
+                  else {
+                       return;
+                  }
             }
-            var beatBaseTempo = Math.round(tempo * 60 / beatBaseItem.mult * 10) / 10; // to 1 decimal place
+            console.log(((addTempo)?'Applying new tempo: ' : 'Changing existing tempo into: ') + beatBaseTempo);
+
             tempoElement.text = beatBaseItem.sym + ' = ' + beatBaseTempo;
             tempoElement.visible = visible;
             if (addTempo) {
@@ -136,6 +150,10 @@ MuseScore {
             //changing of tempo can only happen after being added to the segment
             tempoElement.tempo = beatBaseTempo / 60; //real tempo setting according to followText
             tempoElement.followText = true; //allows for manual fiddling by the user afterwards
+
+            if (tempoTracker) {
+                  tempoTracker[beatBaseTempo] = true;
+            }
       }
 
       Rectangle {
