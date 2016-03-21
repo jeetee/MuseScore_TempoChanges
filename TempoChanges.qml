@@ -55,6 +55,9 @@ MuseScore {
             if (startTextValue.text != "") {
                   var startText = newElement(Element.STAFF_TEXT);
                   startText.text = startTextValue.text;
+                  if (startText.textStyleType !== undefined) {
+                        startText.textStyleType = TextStyleType.TECHNIQUE;
+                  }
                   cursor.add(startText);
             }
 
