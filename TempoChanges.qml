@@ -49,6 +49,7 @@ MuseScore {
             var cursor = curScore.newCursor();
             cursor.rewind(1); //start of selection
             var tempoTracker = {}; //tracker to ensure only one marking is created per 0.1 tempo changes
+            var endSegment = { track: undefined, tick: undefined };
 
             curScore.startCmd();
             //add indicative text if required
@@ -72,10 +73,21 @@ MuseScore {
                         cursor.next();
                   }
 
-                  //processed selection, now end at new tempo with a visible element
-                  if (cursor.segment) { //but only if there still is an element available
-                        applyTempoToSegment(endTempo, cursor, true, beatBaseItem);
+                  if (cursor.segment) { //first element after selection
+                        if ((endSegment.tick === undefined) || (cursor.tick < endSegment.tick)) { //is closer to the selection end than in previous tracks
+                              endSegment.track = cursor.track;
+                              endSegment.tick = cursor.tick;
+                        }
                   }
+            }
+            //processed selection, now end at new tempo with a visible element
+            if ((endSegment.track !== undefined) && (endSegment.tick !== undefined)) { //but only if we found one
+                  //relocate it
+                  cursor.rewind(1);
+                  cursor.track = endSegment.track;
+                  while (cursor.tick < endSegment.tick) { cursor.next(); }
+                  //arrived at end segment, write marking
+                  applyTempoToSegment(endTempo, cursor, true, beatBaseItem);
             }
 
             curScore.endCmd(false);
