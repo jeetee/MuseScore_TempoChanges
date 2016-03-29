@@ -15,7 +15,7 @@ import MuseScore 1.0
 
 MuseScore {
       menuPath: "Plugins.TempoChanges"
-      version: "2.2"
+      version: "2.3"
       description: qsTr("Creates linear hidden tempo markers.\nSee also: https://musescore.org/en/handbook/tempo-0#ritardando-accelerando")
       pluginType: "dialog"
       //requiresScore: true //not supported before 2.1.0, manual checking onRun
@@ -73,7 +73,7 @@ MuseScore {
                   }
 
                   //processed selection, now end at new tempo with a visible element
-                  if (cursor.segment) { //but only if there still is an element availble
+                  if (cursor.segment) { //but only if there still is an element available
                         applyTempoToSegment(endTempo, cursor, true, beatBaseItem);
                   }
             }
@@ -131,11 +131,12 @@ MuseScore {
 
       function applyTempoToSegment(tempo, cursor, visible, beatBaseItem, tempoTracker)
       {
-            var beatBaseTempo = Math.round(tempo * 60 / beatBaseItem.mult * 10) / 10; // to 1 decimal place
+            var quarterBaseTempo = Math.round(tempo * 60 * 10) / 10; //internal bpm is allowed up to 1 decimal place
+            var beatBaseTempo = Math.round(tempo * 60 / beatBaseItem.mult * 10) / 10; //as is displayed marking
             var tempoElement = findExistingTempoElement(cursor.segment);
             var addTempo = false;
             if (tempoElement === undefined) {
-                  if (!tempoTracker || (tempoTracker && !tempoTracker[beatBaseTempo])) { //only create new element for tempo if tempo wasn't added yet
+                  if (!tempoTracker || (tempoTracker && !tempoTracker[quarterBaseTempo])) { //only create new element for tempo if tempo wasn't added yet
                         tempoElement = newElement(Element.TEMPO_TEXT);
                         addTempo = true;
                   }
@@ -151,11 +152,11 @@ MuseScore {
                   cursor.add(tempoElement);
             }
             //changing of tempo can only happen after being added to the segment
-            tempoElement.tempo = beatBaseTempo / 60; //real tempo setting according to followText
+            tempoElement.tempo = quarterBaseTempo / 60; //real tempo setting according to followText
             tempoElement.followText = true; //allows for manual fiddling by the user afterwards
 
             if (tempoTracker) {
-                  tempoTracker[beatBaseTempo] = true;
+                  tempoTracker[quarterBaseTempo] = true;
             }
       }
 
