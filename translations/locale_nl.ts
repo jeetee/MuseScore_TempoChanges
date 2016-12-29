@@ -4,7 +4,14 @@
 <context>
     <name>Ms::MuseScore</name>
     <message>
-        <location filename="../TempoChanges.qml" line="+134"/>
+        <location filename="../TempoChanges.qml" line="+28"/>
+        <source>No score open.
+This plugin requires an open score to run.
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+157"/>
         <source>Staff Text</source>
         <translation type="unfinished"></translation>
     </message>
@@ -18,19 +25,9 @@
     </message>
 </context>
 <context>
-    <name>QMessageBox</name>
-    <message>
-        <location line="-170"/>
-        <source>No score open.
-This plugin requires an open score to run.
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>TempoChanges</name>
     <message>
-        <location line="-9"/>
+        <location line="-230"/>
         <source>Creates linear hidden tempo markers.
 See also: https://musescore.org/en/handbook/tempo-0#ritardando-accelerando</source>
         <translatorcomment>Nederlands handboek heeft (nog) geen item over rit-accel</translatorcomment>
@@ -38,19 +35,19 @@ See also: https://musescore.org/en/handbook/tempo-0#ritardando-accelerando</sour
 Zie ook: https://musescore.org/nl/handboek/tempo-0</translation>
     </message>
     <message>
-        <location line="+124"/>
-        <source>BPM beat: </source>
-        <translation>BPM tel: </translation>
+        <location line="+175"/>
+        <source>BPM beat:</source>
+        <translation>BPM tel:</translation>
     </message>
     <message>
         <location line="+33"/>
-        <source>Start BPM: </source>
-        <translation>Begin BPM: </translation>
+        <source>Start BPM:</source>
+        <translation>Begin BPM:</translation>
     </message>
     <message>
         <location line="+10"/>
-        <source>End BPM: </source>
-        <translation>Eind BPM: </translation>
+        <source>End BPM:</source>
+        <translation>Eind BPM:</translation>
     </message>
 </context>
 </TS>
