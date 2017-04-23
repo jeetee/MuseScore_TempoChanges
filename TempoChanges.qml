@@ -25,7 +25,7 @@ MuseScore {
 
       onRun: {
             if (!curScore) {
-                  console.log(qsTranslate("QMessageBox", "No score open.\nThis plugin requires an open score to run.\n"));
+                  console.log(qsTranslate("Ms::MuseScore", "No score open.\nThis plugin requires an open score to run.\n"));
                   Qt.quit();
             }
       }
@@ -182,7 +182,7 @@ MuseScore {
                   anchors.margins: 10
 
                   Label {
-                        text: qsTranslate("Ms::MuseScore", "Staff Text") + ": "
+                        text: qsTranslate("Ms::MuseScore", "Staff Text") + ":"
                   }
                   TextField {
                         id: startTextValue
@@ -191,7 +191,7 @@ MuseScore {
                   }
 
                   Label {
-                        text: qsTr("BPM beat: ")
+                        text: qsTr("BPM beat:")
                   }
                   ComboBox {
                         id: beatBase
@@ -224,7 +224,7 @@ MuseScore {
                   }
 
                   Label {
-                        text: qsTr("Start BPM: ")
+                        text: qsTr("Start BPM:")
                   }
                   TextField {
                         id: startBPMvalue
@@ -234,7 +234,7 @@ MuseScore {
                   }
 
                   Label {
-                        text: qsTr("End BPM: ")
+                        text: qsTr("End BPM:")
                   }
                   TextField {
                         id: endBPMvalue
