@@ -1,31 +1,31 @@
 //=============================================================================
 //  TempoChanges Plugin
 //
-//  Based on the principle of hidden tempo markings mentioned in the handbook
-//  Attempts to create a linear ritartando or accelerando
+//  Based on the principle of hidden tempo markings mentioned in the 2.0 handbook
+//  Attempts to create a ritartando or accelerando
 //
-//  Copyright (C) 2016-2019 Johan Temmerman (jeetee)
+//  Copyright (C) 2016 Johan Temmerman (jeetee)
 //=============================================================================
 import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.3
 import QtQuick.Layouts 1.1
 
-import MuseScore 3.0
+import MuseScore 1.0
 
 MuseScore {
       menuPath: "Plugins.TempoChanges"
-      version: "3.0.1"
-      description: qsTr("Creates linear hidden tempo markers.\nSee also: https://musescore.org/en/handbook/3/tempo#ritardando-accelerando")
+      version: "2.3.1"
+      description: qsTr("Creates hidden tempo markers.\nSee also: https://musescore.org/en/handbook/tempo-0#ritardando-accelerando")
       pluginType: "dialog"
-      requiresScore: true
+      //requiresScore: true //not supported before 2.1.0, manual checking onRun
 
       width:  240
       height: 240
 
       onRun: {
-            if ((mscoreMajorVersion == 3) && (mscoreMinorVersion == 0) && (mscoreUpdateVersion < 5)) {
-                  console.log(qsTr("Unsupported MuseScore version.\nTempoChanges needs v3.0.5 or above.\n"));
+            if (!curScore) {
+                  console.log(qsTranslate("Ms::MuseScore", "No score open.\nThis plugin requires an open score to run.\n"));
                   Qt.quit();
             }
       }
@@ -67,8 +67,8 @@ MuseScore {
                   cursor.track = trackIdx;
 
                   while (cursor.segment && (cursor.tick < sel.end)) {
-                        //linear interpolation of the desired tempo
-                        var newTempo = ((cursor.tick - sel.start) / durationTicks * tempoRange) + startTempo;
+                        //non-linear interpolation of the desired tempo
+                        var newTempo = deltaTempo((cursor.tick - sel.start) / durationTicks) * tempoRange + startTempo;
                         applyTempoToSegment(newTempo, cursor, false, beatBaseItem, tempoTracker);
                         cursor.next();
                   }
@@ -172,6 +172,29 @@ MuseScore {
             }
       }
 
+      function deltaTempo(fraction)
+      {
+        // fraction is the current fraction of the number of ticks in the range 0.0 - 1.0
+        //
+        // The early/late linearity slider also ranges from 0.0 to 1.0, or just shy of that to avoid exceptions.
+        // With the slider at 0 we would like all of the tempo change to be applied immediately.
+        // With the slider at at 1/4 we would like the mid tempo to be reached 1/4 of the way through the change.
+        // With the slider at at 1/2 we would like the mid tempo to be reached 1/2 way through the change, etc.
+        //
+        // For any input slider value l, we want the equivalent fraction f to be mapped to 1/2
+        //
+        // We can do this by raising the fraction to a certain power.
+        //
+        // f^p = 1/2  ; where f = l
+        //
+        // log(f^p) = p.log(f) = log(1/2)
+        //
+        // p = log(1/2) / log(f)
+        //
+        var power = Math.log(1/2) / Math.log(linearity.value);
+        return Math.pow(fraction, power)
+      }
+
       Rectangle {
             color: "lightgrey"
             anchors.fill: parent
@@ -198,20 +221,20 @@ MuseScore {
                         model: ListModel {
                               id: beatBaseList
                               //mult is a tempo-multiplier compared to a crotchet      
-                              //ListElement { text: '\uECA0';               mult: 8     ; sym: '<sym>metNoteDoubleWhole</sym>' } // 2/1
-                              ListElement { text: '\uECA2';               mult: 4     ; sym: '<sym>metNoteWhole</sym>' } // 1/1
-                              //ListElement { text: '\uECA3 \uE1E7 \uE1E7'; mult: 3.5   ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/2..
-                              ListElement { text: '\uECA3 \uECB7';        mult: 3     ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym>' } // 1/2.
-                              ListElement { text: '\uECA3';               mult: 2     ; sym: '<sym>metNoteHalfUp</sym>' } // 1/2
-                              ListElement { text: '\uECA5 \uECB7 \uECB7'; mult: 1.75  ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/4..
-                              ListElement { text: '\uECA5 \uECB7';        mult: 1.5   ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym>' } // 1/4.
-                              ListElement { text: '\uECA5';               mult: 1     ; sym: '<sym>metNoteQuarterUp</sym>' } // 1/4
-                              ListElement { text: '\uECA7 \uECB7 \uECB7'; mult: 0.875 ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/8..
-                              ListElement { text: '\uECA7 \uECB7';        mult: 0.75  ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym>' } // 1/8.
-                              ListElement { text: '\uECA7';               mult: 0.5   ; sym: '<sym>metNote8thUp</sym>' } // 1/8
-                              ListElement { text: '\uECA9 \uECB7 \uECB7'; mult: 0.4375; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } //1/16..
-                              ListElement { text: '\uECA9 \uECB7';        mult: 0.375 ; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym>' } //1/16.
-                              ListElement { text: '\uECA9';               mult: 0.25  ; sym: '<sym>metNote16thUp</sym>' } //1/16
+                              //ListElement { text: '\uE1D0';               mult: 8     ; sym: '<sym>metNoteDoubleWhole</sym>' } // 2/1
+                              ListElement { text: '\uE1D2';               mult: 4     ; sym: '<sym>metNoteWhole</sym>' } // 1/1
+                              //ListElement { text: '\uE1D3 \uE1E7 \uE1E7'; mult: 3.5   ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/2..
+                              ListElement { text: '\uE1D3 \uE1E7';        mult: 3     ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym>' } // 1/2.
+                              ListElement { text: '\uE1D3';               mult: 2     ; sym: '<sym>metNoteHalfUp</sym>' } // 1/2
+                              ListElement { text: '\uE1D5 \uE1E7 \uE1E7'; mult: 1.75  ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/4..
+                              ListElement { text: '\uE1D5 \uE1E7';        mult: 1.5   ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym>' } // 1/4.
+                              ListElement { text: '\uE1D5';               mult: 1     ; sym: '<sym>metNoteQuarterUp</sym>' } // 1/4
+                              ListElement { text: '\uE1D7 \uE1E7 \uE1E7'; mult: 0.875 ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/8..
+                              ListElement { text: '\uE1D7 \uE1E7';        mult: 0.75  ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym>' } // 1/8.
+                              ListElement { text: '\uE1D7';               mult: 0.5   ; sym: '<sym>metNote8thUp</sym>' } // 1/8
+                              ListElement { text: '\uE1D9 \uE1E7 \uE1E7'; mult: 0.4375; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } //1/16..
+                              ListElement { text: '\uE1D9 \uE1E7';        mult: 0.375 ; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym>' } //1/16.
+                              ListElement { text: '\uE1D9';               mult: 0.25  ; sym: '<sym>metNote16thUp</sym>' } //1/16
                         }
                         currentIndex: 5
                         implicitHeight: 42
@@ -219,7 +242,7 @@ MuseScore {
                               font.family: 'MScore Text'
                               font.pointSize: 18
                               padding.top: 5
-                              padding.bottom: 5
+                              padding.bottom: -10
                         }
                   }
 
@@ -241,6 +264,19 @@ MuseScore {
                         placeholderText: '60'
                         validator: DoubleValidator { bottom: 1;/* top: 512;*/ decimals: 1; notation: DoubleValidator.StandardNotation; }
                         implicitHeight: 24
+                  }
+
+                  GroupBox {
+                    Layout.columnSpan: 2
+                    title: "Early / Late"
+                    RowLayout {
+                      Slider {
+                        id: linearity
+                        minimumValue: 0.001
+                        maximumValue: 0.999
+                        value: 0.5
+                      }
+                    }
                   }
 
                   Button {
