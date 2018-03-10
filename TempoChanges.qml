@@ -67,8 +67,8 @@ MuseScore {
                   cursor.track = trackIdx;
 
                   while (cursor.segment && (cursor.tick < sel.end)) {
-                        //linear interpolation of the desired tempo
-                        var newTempo = ((cursor.tick - sel.start) / durationTicks * tempoRange) + startTempo;
+                        //non-linear interpolation of the desired tempo
+                        var newTempo = deltaTempo((cursor.tick - sel.start) / durationTicks, tempoRange) + startTempo;
                         applyTempoToSegment(newTempo, cursor, false, beatBaseItem, tempoTracker);
                         cursor.next();
                   }
@@ -172,6 +172,53 @@ MuseScore {
             }
       }
 
+      function deltaTempo(fraction, tempoRange)
+      {
+        // fraction is the current fraction of the number of ticks in the range 0.0 - 1.0
+        //
+        // The early/late linearity slider also ranges from 0.0 to 1.0, or just shy of that to avoid exceptions.
+        // With the slider at 0 we would like all of the tempo change to be applied immediately.
+        // With the slider at at 1/4 we would like the mid tempo to be reached 1/4 of the way through the change.
+        // With the slider at at 1/2 we would like the mid tempo to be reached 1/2 way through the change, etc.
+        //
+        // We can do this by raising the fraction to a certain power.
+        ///
+        // by inspection (fraction is f):
+        // f ^ 3 maps 7/8 => 1/2
+        // f ^ 2 maps 3/4 => 1/2
+        // f ^ 1 maps 1/2 => 1/2 etc.
+        //
+        // so we want a function that maps linearity l to power p:
+        // l   => p
+        // 7/8 => 3
+        // 3/4 => 2
+        // 1/2 => 1
+        // assumption: this holds for l = 1/4, 1/8 etc.
+        //
+        // by inspection the inverse function p => l is: l = 1 - 1/(2^p)
+        // so we need to calculate p given l:
+        //     l = 1 - 1/(2^p)
+        // add 1/(2^p):
+        //     l + 1/(2^p) = 1
+        // subtract l:
+        //     1/(2^p) = 1 - l
+        // multiply 2^p:
+        //     1 = (2^p)(1 - l)
+        // divide (1 - l):
+        //     1/(1 - l) = 2^p
+        // take logs:
+        //     log(1/(1 - l)) = log(2^p) = p*log(2)
+        // divide by log(2):
+        //     log(1/(1 - l))/log(2) = p
+        var power = Math.log(1 / (1 - linearity.value)) / Math.log(2);
+        // we now just need to make sure the tempo change is applied in the right order
+        if (tempoRange < 0) { // rit.
+            return Math.pow(fraction, power) * tempoRange
+        } else { // accel.
+            return Math.pow(1 - fraction, power) * tempoRange
+        }
+      }
+
       Rectangle {
             color: "lightgrey"
             anchors.fill: parent
@@ -243,6 +290,19 @@ MuseScore {
                         implicitHeight: 24
                   }
 
+                  GroupBox {
+                    Layout.columnSpan: 2
+                    title: "Early / Late"
+                    RowLayout {
+                      Slider {
+                        id: linearity
+                        minimumValue: 0.001
+                        maximumValue: 0.999
+                        value: 0.5
+                      }
+                    }
+                  }
+
                   Button {
                         id: applyButton
                         Layout.columnSpan: 2
@@ -252,8 +312,6 @@ MuseScore {
                               Qt.quit();
                         }
                   }
-
             }
       }
-
 }
