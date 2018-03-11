@@ -68,7 +68,7 @@ MuseScore {
 
                   while (cursor.segment && (cursor.tick < sel.end)) {
                         //non-linear interpolation of the desired tempo
-                        var newTempo = deltaTempo((cursor.tick - sel.start) / durationTicks, tempoRange) + startTempo;
+                        var newTempo = deltaTempo((cursor.tick - sel.start) / durationTicks) * tempoRange + startTempo;
                         applyTempoToSegment(newTempo, cursor, false, beatBaseItem, tempoTracker);
                         cursor.next();
                   }
@@ -172,7 +172,7 @@ MuseScore {
             }
       }
 
-      function deltaTempo(fraction, tempoRange)
+      function deltaTempo(fraction)
       {
         // fraction is the current fraction of the number of ticks in the range 0.0 - 1.0
         //
@@ -197,6 +197,7 @@ MuseScore {
         //
         // by inspection the inverse function p => l is: l = 1 - 1/(2^p)
         // so we need to calculate p given l:
+        //
         //     l = 1 - 1/(2^p)
         //
         //     l + 1/(2^p) = 1
@@ -212,7 +213,7 @@ MuseScore {
         //     log(1/(1 - l))/log(2) = p
         //
         var power = Math.log(1 / (1 - linearity.value)) / Math.log(2);
-        return Math.pow(fraction, power) * tempoRange
+        return Math.pow(fraction, power)
       }
 
       Rectangle {
