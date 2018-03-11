@@ -198,25 +198,21 @@ MuseScore {
         // by inspection the inverse function p => l is: l = 1 - 1/(2^p)
         // so we need to calculate p given l:
         //     l = 1 - 1/(2^p)
-        // add 1/(2^p):
+        //
         //     l + 1/(2^p) = 1
-        // subtract l:
+        //
         //     1/(2^p) = 1 - l
-        // multiply 2^p:
+        //
         //     1 = (2^p)(1 - l)
-        // divide (1 - l):
+        //
         //     1/(1 - l) = 2^p
-        // take logs:
+        //
         //     log(1/(1 - l)) = log(2^p) = p*log(2)
-        // divide by log(2):
+        //
         //     log(1/(1 - l))/log(2) = p
+        //
         var power = Math.log(1 / (1 - linearity.value)) / Math.log(2);
-        // we now just need to make sure the tempo change is applied in the right order
-        if (tempoRange < 0) { // rit.
-            return Math.pow(fraction, power) * tempoRange
-        } else { // accel.
-            return Math.pow(1 - fraction, power) * tempoRange
-        }
+        return Math.pow(fraction, power) * tempoRange
       }
 
       Rectangle {
