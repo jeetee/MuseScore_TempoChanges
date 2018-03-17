@@ -181,38 +181,17 @@ MuseScore {
         // With the slider at at 1/4 we would like the mid tempo to be reached 1/4 of the way through the change.
         // With the slider at at 1/2 we would like the mid tempo to be reached 1/2 way through the change, etc.
         //
+        // For any input slider value l, we want the equivalent fraction f to be mapped to 1/2
+        //
         // We can do this by raising the fraction to a certain power.
-        ///
-        // by inspection (fraction is f):
-        // f ^ 3 maps 7/8 => 1/2
-        // f ^ 2 maps 3/4 => 1/2
-        // f ^ 1 maps 1/2 => 1/2 etc.
         //
-        // so we want a function that maps linearity l to power p:
-        // l   => p
-        // 7/8 => 3
-        // 3/4 => 2
-        // 1/2 => 1
-        // assumption: this holds for l = 1/4, 1/8 etc.
+        // f^p = 1/2  ; where f = l
         //
-        // by inspection the inverse function p => l is: l = 1 - 1/(2^p)
-        // so we need to calculate p given l:
+        // log(f^p) = p.log(f) = log(1/2)
         //
-        //     l = 1 - 1/(2^p)
+        // p = log(1/2) / log(f)
         //
-        //     l + 1/(2^p) = 1
-        //
-        //     1/(2^p) = 1 - l
-        //
-        //     1 = (2^p)(1 - l)
-        //
-        //     1/(1 - l) = 2^p
-        //
-        //     log(1/(1 - l)) = log(2^p) = p*log(2)
-        //
-        //     log(1/(1 - l))/log(2) = p
-        //
-        var power = Math.log(1 / (1 - linearity.value)) / Math.log(2);
+        var power = Math.log(1/2) / Math.log(linearity.value);
         return Math.pow(fraction, power)
       }
 
