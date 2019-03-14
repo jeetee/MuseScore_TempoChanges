@@ -1,31 +1,31 @@
 //=============================================================================
 //  TempoChanges Plugin
 //
-//  Based on the principle of hidden tempo markings mentioned in the 2.0 handbook
+//  Based on the principle of hidden tempo markings mentioned in the handbook
 //  Attempts to create a linear ritartando or accelerando
 //
-//  Copyright (C) 2016 Johan Temmerman (jeetee)
+//  Copyright (C) 2016-2019 Johan Temmerman (jeetee)
 //=============================================================================
 import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.3
 import QtQuick.Layouts 1.1
 
-import MuseScore 1.0
+import MuseScore 3.0
 
 MuseScore {
       menuPath: "Plugins.TempoChanges"
-      version: "2.3.1"
-      description: qsTr("Creates linear hidden tempo markers.\nSee also: https://musescore.org/en/handbook/tempo-0#ritardando-accelerando")
+      version: "3.0.0"
+      description: qsTr("Creates linear hidden tempo markers.\nSee also: https://musescore.org/en/handbook/tempo#ritardando-accelerando")
       pluginType: "dialog"
-      //requiresScore: true //not supported before 2.1.0, manual checking onRun
+      requiresScore: true
 
       width:  240
       height: 240
 
       onRun: {
-            if (!curScore) {
-                  console.log(qsTranslate("Ms::MuseScore", "No score open.\nThis plugin requires an open score to run.\n"));
+            if ((mscoreMajorVersion == 3) && (mscoreMinorVersion == 0) && (mscoreUpdateVersion < 5)) {
+                  console.log(qsTr("Unsupported MuseScore version.\nTempoChanges needs v3.0.5 or above.\n"));
                   Qt.quit();
             }
       }
