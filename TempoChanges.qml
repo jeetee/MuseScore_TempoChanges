@@ -1,31 +1,31 @@
 //=============================================================================
 //  TempoChanges Plugin
 //
-//  Based on the principle of hidden tempo markings mentioned in the 2.0 handbook
+//  Based on the principle of hidden tempo markings mentioned in the handbook
 //  Attempts to create a linear ritartando or accelerando
 //
-//  Copyright (C) 2016 Johan Temmerman (jeetee)
+//  Copyright (C) 2016-2019 Johan Temmerman (jeetee)
 //=============================================================================
 import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.3
 import QtQuick.Layouts 1.1
 
-import MuseScore 1.0
+import MuseScore 3.0
 
 MuseScore {
       menuPath: "Plugins.TempoChanges"
-      version: "2.3.1"
-      description: qsTr("Creates linear hidden tempo markers.\nSee also: https://musescore.org/en/handbook/tempo-0#ritardando-accelerando")
+      version: "3.0.0"
+      description: qsTr("Creates linear hidden tempo markers.\nSee also: https://musescore.org/en/handbook/tempo#ritardando-accelerando")
       pluginType: "dialog"
-      //requiresScore: true //not supported before 2.1.0, manual checking onRun
+      requiresScore: true
 
       width:  240
       height: 240
 
       onRun: {
-            if (!curScore) {
-                  console.log(qsTranslate("Ms::MuseScore", "No score open.\nThis plugin requires an open score to run.\n"));
+            if ((mscoreMajorVersion == 3) && (mscoreMinorVersion == 0) && (mscoreUpdateVersion < 5)) {
+                  console.log(qsTr("Unsupported MuseScore version.\nTempoChanges needs v3.0.5 or above.\n"));
                   Qt.quit();
             }
       }
@@ -198,20 +198,20 @@ MuseScore {
                         model: ListModel {
                               id: beatBaseList
                               //mult is a tempo-multiplier compared to a crotchet      
-                              //ListElement { text: '\uE1D0';               mult: 8     ; sym: '<sym>metNoteDoubleWhole</sym>' } // 2/1
-                              ListElement { text: '\uE1D2';               mult: 4     ; sym: '<sym>metNoteWhole</sym>' } // 1/1
-                              //ListElement { text: '\uE1D3 \uE1E7 \uE1E7'; mult: 3.5   ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/2..
-                              ListElement { text: '\uE1D3 \uE1E7';        mult: 3     ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym>' } // 1/2.
-                              ListElement { text: '\uE1D3';               mult: 2     ; sym: '<sym>metNoteHalfUp</sym>' } // 1/2
-                              ListElement { text: '\uE1D5 \uE1E7 \uE1E7'; mult: 1.75  ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/4..
-                              ListElement { text: '\uE1D5 \uE1E7';        mult: 1.5   ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym>' } // 1/4.
-                              ListElement { text: '\uE1D5';               mult: 1     ; sym: '<sym>metNoteQuarterUp</sym>' } // 1/4
-                              ListElement { text: '\uE1D7 \uE1E7 \uE1E7'; mult: 0.875 ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/8..
-                              ListElement { text: '\uE1D7 \uE1E7';        mult: 0.75  ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym>' } // 1/8.
-                              ListElement { text: '\uE1D7';               mult: 0.5   ; sym: '<sym>metNote8thUp</sym>' } // 1/8
-                              ListElement { text: '\uE1D9 \uE1E7 \uE1E7'; mult: 0.4375; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } //1/16..
-                              ListElement { text: '\uE1D9 \uE1E7';        mult: 0.375 ; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym>' } //1/16.
-                              ListElement { text: '\uE1D9';               mult: 0.25  ; sym: '<sym>metNote16thUp</sym>' } //1/16
+                              //ListElement { text: '\uECA0';               mult: 8     ; sym: '<sym>metNoteDoubleWhole</sym>' } // 2/1
+                              ListElement { text: '\uECA2';               mult: 4     ; sym: '<sym>metNoteWhole</sym>' } // 1/1
+                              //ListElement { text: '\uECA3 \uE1E7 \uE1E7'; mult: 3.5   ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/2..
+                              ListElement { text: '\uECA3 \uECB7';        mult: 3     ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym>' } // 1/2.
+                              ListElement { text: '\uECA3';               mult: 2     ; sym: '<sym>metNoteHalfUp</sym>' } // 1/2
+                              ListElement { text: '\uECA5 \uECB7 \uECB7'; mult: 1.75  ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/4..
+                              ListElement { text: '\uECA5 \uECB7';        mult: 1.5   ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym>' } // 1/4.
+                              ListElement { text: '\uECA5';               mult: 1     ; sym: '<sym>metNoteQuarterUp</sym>' } // 1/4
+                              ListElement { text: '\uECA7 \uECB7 \uECB7'; mult: 0.875 ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/8..
+                              ListElement { text: '\uECA7 \uECB7';        mult: 0.75  ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym>' } // 1/8.
+                              ListElement { text: '\uECA7';               mult: 0.5   ; sym: '<sym>metNote8thUp</sym>' } // 1/8
+                              ListElement { text: '\uECA9 \uECB7 \uECB7'; mult: 0.4375; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } //1/16..
+                              ListElement { text: '\uECA9 \uECB7';        mult: 0.375 ; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym>' } //1/16.
+                              ListElement { text: '\uECA9';               mult: 0.25  ; sym: '<sym>metNote16thUp</sym>' } //1/16
                         }
                         currentIndex: 5
                         implicitHeight: 42
@@ -219,7 +219,7 @@ MuseScore {
                               font.family: 'MScore Text'
                               font.pointSize: 18
                               padding.top: 5
-                              padding.bottom: -10
+                              padding.bottom: 5
                         }
                   }
 
