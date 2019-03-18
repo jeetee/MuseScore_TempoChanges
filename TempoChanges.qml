@@ -198,20 +198,20 @@ MuseScore {
                         model: ListModel {
                               id: beatBaseList
                               //mult is a tempo-multiplier compared to a crotchet      
-                              //ListElement { text: '\uE1D0';               mult: 8     ; sym: '<sym>metNoteDoubleWhole</sym>' } // 2/1
-                              ListElement { text: '\uE1D2';               mult: 4     ; sym: '<sym>metNoteWhole</sym>' } // 1/1
-                              //ListElement { text: '\uE1D3 \uE1E7 \uE1E7'; mult: 3.5   ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/2..
-                              ListElement { text: '\uE1D3 \uE1E7';        mult: 3     ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym>' } // 1/2.
-                              ListElement { text: '\uE1D3';               mult: 2     ; sym: '<sym>metNoteHalfUp</sym>' } // 1/2
-                              ListElement { text: '\uE1D5 \uE1E7 \uE1E7'; mult: 1.75  ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/4..
-                              ListElement { text: '\uE1D5 \uE1E7';        mult: 1.5   ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym>' } // 1/4.
-                              ListElement { text: '\uE1D5';               mult: 1     ; sym: '<sym>metNoteQuarterUp</sym>' } // 1/4
-                              ListElement { text: '\uE1D7 \uE1E7 \uE1E7'; mult: 0.875 ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/8..
-                              ListElement { text: '\uE1D7 \uE1E7';        mult: 0.75  ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym>' } // 1/8.
-                              ListElement { text: '\uE1D7';               mult: 0.5   ; sym: '<sym>metNote8thUp</sym>' } // 1/8
-                              ListElement { text: '\uE1D9 \uE1E7 \uE1E7'; mult: 0.4375; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } //1/16..
-                              ListElement { text: '\uE1D9 \uE1E7';        mult: 0.375 ; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym>' } //1/16.
-                              ListElement { text: '\uE1D9';               mult: 0.25  ; sym: '<sym>metNote16thUp</sym>' } //1/16
+                              //ListElement { text: '\uECA0';               mult: 8     ; sym: '<sym>metNoteDoubleWhole</sym>' } // 2/1
+                              ListElement { text: '\uECA2';               mult: 4     ; sym: '<sym>metNoteWhole</sym>' } // 1/1
+                              //ListElement { text: '\uECA3 \uE1E7 \uE1E7'; mult: 3.5   ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/2..
+                              ListElement { text: '\uECA3 \uECB7';        mult: 3     ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym>' } // 1/2.
+                              ListElement { text: '\uECA3';               mult: 2     ; sym: '<sym>metNoteHalfUp</sym>' } // 1/2
+                              ListElement { text: '\uECA5 \uECB7 \uECB7'; mult: 1.75  ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/4..
+                              ListElement { text: '\uECA5 \uECB7';        mult: 1.5   ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym>' } // 1/4.
+                              ListElement { text: '\uECA5';               mult: 1     ; sym: '<sym>metNoteQuarterUp</sym>' } // 1/4
+                              ListElement { text: '\uECA7 \uECB7 \uECB7'; mult: 0.875 ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/8..
+                              ListElement { text: '\uECA7 \uECB7';        mult: 0.75  ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym>' } // 1/8.
+                              ListElement { text: '\uECA7';               mult: 0.5   ; sym: '<sym>metNote8thUp</sym>' } // 1/8
+                              ListElement { text: '\uECA9 \uECB7 \uECB7'; mult: 0.4375; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } //1/16..
+                              ListElement { text: '\uECA9 \uECB7';        mult: 0.375 ; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym>' } //1/16.
+                              ListElement { text: '\uECA9';               mult: 0.25  ; sym: '<sym>metNote16thUp</sym>' } //1/16
                         }
                         currentIndex: 5
                         implicitHeight: 42
@@ -219,7 +219,7 @@ MuseScore {
                               font.family: 'MScore Text'
                               font.pointSize: 18
                               padding.top: 5
-                              padding.bottom: -10
+                              padding.bottom: 5
                         }
                   }
 
