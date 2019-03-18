@@ -4,14 +4,7 @@
 <context>
     <name>Ms::MuseScore</name>
     <message>
-        <location filename="../TempoChanges.qml" line="+28"/>
-        <source>No score open.
-This plugin requires an open score to run.
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+157"/>
+        <location filename="../TempoChanges.qml" line="+185"/>
         <source>Staff Text</source>
         <translation type="unfinished"></translation>
     </message>
@@ -29,12 +22,19 @@ This plugin requires an open score to run.
     <message>
         <location line="-230"/>
         <source>Creates linear hidden tempo markers.
-See also: https://musescore.org/en/handbook/tempo-0#ritardando-accelerando</source>
+See also: https://musescore.org/en/handbook/tempo#ritardando-accelerando</source>
         <translation>Erzeugt lineare versteckte Tempomarkierungen.
-Siehe auch: https://musescore.org/de/handbuch/tempo-0#ritardando-accelerando</translation>
+Siehe auch: https://musescore.org/de/node/278604#ritardando-accelerando</translation>
     </message>
     <message>
-        <location line="+175"/>
+        <location line="+9"/>
+        <source>Unsupported MuseScore version.
+TempoChanges needs v3.0.5 or above.
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+166"/>
         <source>BPM beat:</source>
         <translation>BPM Schläge:</translation>
     </message>
