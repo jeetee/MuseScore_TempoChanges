@@ -22,9 +22,10 @@
     <message>
         <location line="-230"/>
         <source>Creates linear hidden tempo markers.
-See also: https://musescore.org/en/handbook/tempo#ritardando-accelerando</source>
+See also: https://musescore.org/en/handbook/3/tempo#ritardando-accelerando</source>
+        <translatorcomment>Handbook not yet translated into Dutch</translatorcomment>
         <translation>Maakt verborgen tempomarkeringen aan.
-Zie ook: https://musescore.org/nl/node/278604#ritardando-accelerando</translation>
+Zie ook: https://musescore.org/en/handbook/3/tempo#ritardando-accelerando</translation>
     </message>
     <message>
         <location line="+9"/>
