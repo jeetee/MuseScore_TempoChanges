@@ -305,4 +305,3 @@ MuseScore {
             }
       }
 }
-// vim: ft=javascript
