@@ -172,27 +172,41 @@ MuseScore {
             }
       }
 
-      function deltaTempo(fraction)
+      function deltaTempo(input)
       {
-        // fraction is the current fraction of the number of ticks in the range 0.0 - 1.0
+        // input is the current fraction of the number of ticks in the range 0.0 - 1.0
         //
-        // The early/late linearity slider also ranges from 0.0 to 1.0, or just shy of that to avoid exceptions.
-        // With the slider at 0 we would like all of the tempo change to be applied immediately.
-        // With the slider at at 1/4 we would like the mid tempo to be reached 1/4 of the way through the change.
-        // With the slider at at 1/2 we would like the mid tempo to be reached 1/2 way through the change, etc.
+        // The early/late linearity slider also ranges from 0.0 to 1.0 (or could do, but we limit it to .25 - .75)
         //
-        // For any input slider value l, we want the equivalent fraction f to be mapped to 1/2
+        // * With the slider at 0 we would like all of the tempo change to be applied immediately.
+        // * With the slider at at 1/4 we would like the mid tempo to be reached 1/4 of the way through the change.
+        // * With the slider at at 1/2 we would like the mid tempo to be reached 1/2 way through the change, etc.
         //
-        // We can do this by raising the fraction to a certain power.
+        // Put another way:
+        // * When the input equals 0 we want the output to be 0.
+        // * When the input equals the slider value we want the output to be 1/2.
+        // * When the input equals 1 we want the output to be 1.
         //
-        // f^p = 1/2  ; where f = l
+        // We can do this by raising the input to some power p, because for any p
+        // 0^p = 0 and 1^p = 1, and so we only need calculate p for the current slider
+        // value, where we know the result should be 1/2.
         //
-        // log(f^p) = p.log(f) = log(1/2)
+        // What power p do we need to raise the current slider value x to, in order to equal 1/2?
         //
-        // p = log(1/2) / log(f)
+        // x^p      = 1/2
         //
-        var power = Math.log(1/2) / Math.log(linearity.value);
-        return Math.pow(fraction, power)
+        // log(x^p) = log(1/2)
+        //
+        // p log(x) = log(1/2)
+        //
+        //            log(1/2)
+        // p        = --------
+        //             log(x)
+        //
+        var x = linearity.value;
+        var p = Math.log(0.5) / Math.log(x);
+        // Now we just raise our actual input to that power and return it.
+        return Math.pow(input, p)
       }
 
       Rectangle {
@@ -272,8 +286,8 @@ MuseScore {
                     RowLayout {
                       Slider {
                         id: linearity
-                        minimumValue: 0.001
-                        maximumValue: 0.999
+                        minimumValue: 0.250
+                        maximumValue: 0.750
                         value: 0.5
                       }
                     }
