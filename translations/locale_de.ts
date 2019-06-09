@@ -4,7 +4,7 @@
 <context>
     <name>Ms::MuseScore</name>
     <message>
-        <location filename="../TempoChanges.qml" line="+185"/>
+        <location filename="../TempoChanges.qml" line="+231"/>
         <source>Staff Text</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12,7 +12,7 @@
 <context>
     <name>PrefsDialogBase</name>
     <message>
-        <location line="+64"/>
+        <location line="+240"/>
         <source>Apply</source>
         <translation type="unfinished"></translation>
     </message>
@@ -20,15 +20,15 @@
 <context>
     <name>TempoChanges</name>
     <message>
-        <location line="-230"/>
-        <source>Creates linear hidden tempo markers.
+        <location line="-450"/>
+        <source>Creates hidden tempo markers.
 See also: https://musescore.org/en/handbook/3/tempo#ritardando-accelerando</source>
         <translatorcomment>Handbook not yet translated into German</translatorcomment>
-        <translation>Erzeugt lineare versteckte Tempomarkierungen.
+        <translation>Erzeugt versteckte Tempomarkierungen.
 Siehe auch: https://musescore.org/en/handbook/3/tempo#ritardando-accelerando</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+11"/>
         <source>Unsupported MuseScore version.
 TempoChanges needs v3.0.5 or above.
 </source>
@@ -36,19 +36,35 @@ TempoChanges needs v3.0.5 or above.
 TempoChanges benötigt v3.0.5 oder höher.</translation>
     </message>
     <message>
-        <location line="+166"/>
+        <location line="+288"/>
         <source>BPM beat:</source>
         <translation>BPM Schläge:</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+35"/>
         <source>Start BPM:</source>
         <translation>Anfangs-BPM:</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+11"/>
         <source>End BPM:</source>
         <translation>End-BPM:</translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <location line="+6"/>
+        <source>Linear</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-5"/>
+        <source>Curved</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>midpoint:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
