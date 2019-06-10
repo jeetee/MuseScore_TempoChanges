@@ -33,7 +33,8 @@ Siehe auch: https://musescore.org/en/handbook/3/tempo#ritardando-accelerando</tr
 TempoChanges needs v3.0.5 or above.
 </source>
         <translation>Nicht unterstützte MuseScore Version.
-TempoChanges benötigt v3.0.5 oder höher.</translation>
+TempoChanges benötigt v3.0.5 oder höher.
+</translation>
     </message>
     <message>
         <location line="+288"/>
@@ -54,17 +55,17 @@ TempoChanges benötigt v3.0.5 oder höher.</translation>
         <location line="+13"/>
         <location line="+6"/>
         <source>Linear</source>
-        <translation type="unfinished"></translation>
+        <translation>Linear</translation>
     </message>
     <message>
         <location line="-5"/>
         <source>Curved</source>
-        <translation type="unfinished"></translation>
+        <translation>Gekrümmt</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>midpoint:</source>
-        <translation type="unfinished"></translation>
+        <translation>Mittelwert:</translation>
     </message>
 </context>
 </TS>
