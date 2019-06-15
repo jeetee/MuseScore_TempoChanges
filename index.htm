@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Musescore TempoChanges: the math behind the Curved option of the plugin">
+
+    <title>Musescore TempoChanges: How does it work?</title>
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	<script>
+		MathJax.Hub.Config({
+			tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+		});
+	</script>
+  </head>
+
+  <body>
+	<section>
+		<h1>When is a marker created?</h1>
+		<p>The plugin scans <em>all</em> staves within the range selection (even hidden staves). It will create a tempo-marking for every encountered chord provided that:<ul>
+		<li>No tempo element exists yet on that time position in the score</li>
+		<li>The tempo that should be generated is at least 1/10th of a quarter note duration different from the previous marking</li></ul>
+		If an existing tempo marking is encountered, it'll be updated by the plugin (both value and visibility)</p>
+	</section>
+	<section>
+		<h1>How does <i>Curved</i> work?</h1>
+		<p>In curved mode, the plugin allows you to influence the exponent value of a power function to set the halfway point of the transistion. That way you can decide whether the biggest part of the tempo change happens sooner or later.</p>
+		<h2>The Algorithm</h2>
+		<p>Goals:<ul><li>When we're at the start of the selection (0% tickRange) the output must be the startTempo (0% of the tempotransition)</li>
+            <li>When we're at midpointSlider % of the selection tickRange, the output must be halfway between start & endTempo (50% of the tempotransition)</li>
+            <li>When we're at the end of the selection (100% tickRange) the output must be the endTempo (100% of the tempotransition)</li>
+            </ul>
+		</p>
+        <p>We can achieve this by raising the % tickRange to some power p, because for any p <samp>\((0\%)^p = 0\%\)</samp> of change applied and <samp>\((100\%)^p = 100\%\)</samp><br>
+            and so we only need calculate p for the current slider value, where we know the result should be 1/2 (50%).</p>
+		<p>What power p do we need to raise the current sliderValue to, in order to equal 1/2?
+		$${sliderValue}^p = 1/2$$
+        $$log({sliderValue}^p) = log(1/2)$$
+        $$p*log({sliderValue}) = log(1/2)$$
+        $$p = { log(1/2) \over log({sliderValue}) }$$
+		</p>
+		<h2>Show me</h2>
+		<div style="position:relative; text-align: center;">
+			<label for="midpointSlider">Midpoint: <span id="midpointValue"></span>%</label> - Power exponent: <span id="powerExpValue"></span><br />
+			<input type="range" min="1" max="99" step="0.1" value="75" id="midpointSlider" style="width: 320px;" /><br />
+			<div style="position: relative; display: inline-block;">
+				<canvas id="canvas" width="320" height="320" style="background-color: #eee; border: 1px solid #000;"></canvas>
+				<span style="position: absolute; top: 1px; left: -10ex;">start BPM</span>
+				<span style="position: absolute; bottom: 1px; right: -10ex;">end BPM</span>
+				<span style="position: absolute; top: calc(50% - 0.5em); left: -5ex; transform: rotate(90deg);">TEMPO</span>
+				<span style="position: absolute; bottom: -1em; left: calc(50% - 2ex);">TIME</span>
+				<span id="crosshair" style="position: absolute; top: 50%; left: 75%; font-family: sans-serif; color: #F00; font-weight: bold; margin-left: -0.5ex; margin-top: calc(-0.5em - 0.5ex);">x</span>
+			</div>
+			
+			<p style="margin-top: 1.5em;">Some common values:<br />
+			<button onclick="slider.value = 25; sliderValueChanged();">25%</button>
+			<button onclick="slider.value = 33.3; sliderValueChanged();">33.3%</button>
+			<button onclick="slider.value = 50; sliderValueChanged();">50% - Linear</button>
+			<button onclick="slider.value = 66.7; sliderValueChanged();">66.7%</button>
+			<button onclick="slider.value = 70.7; sliderValueChanged();">70.7% - Quadratic (power exponent 2)</button>
+			<button onclick="slider.value = 75; sliderValueChanged();">75%</button>
+			<button onclick="slider.value = 84.1; sliderValueChanged();">84.1% - power exponent 4</button>
+			</p>
+			
+			<script type="text/javascript">
+				var slider = document.getElementById('midpointSlider');
+				var sliderValueOutput = document.getElementById('midpointValue');
+				var crosshair = document.getElementById('crosshair');
+				var canvas = document.getElementById('canvas');
+				var powerExpValue = document.getElementById('powerExpValue');
+				var powerExp;
+				
+				slider.oninput = sliderValueChanged;
+				
+				function sliderValueChanged() {
+					sliderValueOutput.innerText = slider.value;
+					crosshair.style.left = slider.value + '%';
+					powerExp = Math.log(0.5) / Math.log(slider.value / 100);
+					powerExpValue.innerText = Number(Math.round(powerExp+'e2')+'e-2'); //round to two decimals using scientific notation hack: see http://www.jacklmoore.com/notes/rounding-in-javascript/
+					paintCanvas();
+				};
+				
+				function paintCanvas() {
+					var w = canvas.scrollWidth;
+					var h = canvas.scrollHeight;
+					var ctx = canvas.getContext("2d");
+
+					//square plot area
+					var length = (w > h) ? h : w;
+					var top = (h - length) / 2;
+					var left = (w - length) / 2;
+					ctx.clearRect(0, 0, w, h);
+
+					//halfway point line
+					ctx.strokeStyle = '#ff0000';
+					ctx.lineWidth = 1;
+					ctx.beginPath();
+					ctx.moveTo(left,          (top + length) / 2);
+					ctx.lineTo(left + length, (top + length) / 2);
+					ctx.stroke();
+					
+					//graph
+					ctx.strokeStyle = '#89a1ff';
+					ctx.lineWidth = 3;
+					ctx.beginPath();
+					ctx.moveTo(left + length, top + length);
+					for (var x = length; x > 0; --x) {
+						  var outputPct = Math.pow((x / length), powerExp);
+						  var newY = top + (outputPct * length);
+						  ctx.lineTo(left + x, newY);
+					}
+					ctx.stroke();
+				}
+
+				//trigger initial processing
+				sliderValueChanged();
+			</script>
+		</div>
+	</section>
+	<footer style="margin-top: 2em; text-align: center; border-top: 1px solid #666; font-style: italic; padding: 0.5em; color: #666;">Thanks to BSG, billhails and Jm6stringer for the inspiration for this page</footer>
+  </body>
+</html>
