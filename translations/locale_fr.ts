@@ -31,38 +31,38 @@ This plugin requires an open score to run.
         <source>Creates hidden tempo markers.
 See also: https://musescore.org/en/handbook/tempo-0#ritardando-accelerando</source>
         <translation>Crée des indications de tempo cachés.
-Voir: https://musescore.org/fr/handbook/tempo#ritardando-accelerando</translation>
+Voir aussi : https://musescore.org/fr/handbook/tempo#ritardando-accelerando</translation>
     </message>
     <message>
         <location line="+299"/>
         <source>BPM beat:</source>
-        <translation>Temps BPM:</translation>
+        <translation>Temps BPM :</translation>
     </message>
     <message>
         <location line="+35"/>
         <source>Start BPM:</source>
-        <translation>BPM de début:</translation>
+        <translation>BPM de début :</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>End BPM:</source>
-        <translation>BPM de fin:</translation>
+        <translation>BPM de fin :</translation>
     </message>
     <message>
         <location line="+13"/>
         <location line="+6"/>
         <source>Linear</source>
-        <translation type="unfinished"></translation>
+        <translation>Linéaire</translation>
     </message>
     <message>
         <location line="-5"/>
         <source>Curved</source>
-        <translation type="unfinished"></translation>
+        <translation>Incurvé</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>midpoint:</source>
-        <translation type="unfinished"></translation>
+        <translation>Point milieu :</translation>
     </message>
 </context>
 </TS>
