@@ -14,7 +14,7 @@
     <message>
         <location line="+240"/>
         <source>Apply</source>
-        <translation>应用</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
