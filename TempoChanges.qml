@@ -17,7 +17,7 @@ import MuseScore 1.0
 
 MuseScore {
       menuPath: "Plugins.TempoChanges"
-      version: "2.4.1"
+      version: "2.4.2"
       description: qsTr("Creates hidden tempo markers.\nSee also: https://musescore.org/en/handbook/tempo-0#ritardando-accelerando")
       pluginType: "dialog"
       //requiresScore: true //not supported before 2.1.0, manual checking onRun
