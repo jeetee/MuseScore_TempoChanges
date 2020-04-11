@@ -32,6 +32,7 @@ MuseScore {
                   console.log(qsTr("Unsupported MuseScore version.\nTempoChanges needs v3.0.5 or above.\n"));
                   Qt.quit();
             }
+            prefillSurroundingTempo();
       }
 
       Settings {
@@ -47,6 +48,36 @@ MuseScore {
 //            category: "ui/application"
 //            //property var globalStyle //MS::MuseScoreStyleType - enum doesn't translate to a value in the plugin framework
 //      }
+
+      function prefillSurroundingTempo()
+      {
+            var sel = getSelection();
+            if (sel === null) { //no selection
+                  console.log('No selection');
+                  return;
+            }
+            var beatBaseItem = beatBase.model.get(beatBase.currentIndex);
+            // Start Tempo
+            var foundTempo = undefined;
+            var segment = sel.startSeg;
+            while ((foundTempo === undefined) && (segment)) {
+                  foundTempo = findExistingTempoElement(segment);
+                  segment = segment.prev;
+            }
+            if (foundTempo !== undefined) {
+                  startBPMvalue.placeholderText = Math.round(foundTempo.tempo * 60 / beatBaseItem.mult * 10) / 10;
+            }
+            // End Tempo
+            foundTempo = undefined
+            segment = sel.endSeg;
+            while ((foundTempo === undefined) && (segment)) {
+                  foundTempo = findExistingTempoElement(segment);
+                  segment = segment.next;
+            }
+            if (foundTempo !== undefined) {
+                  endBPMvalue.placeholderText = Math.round(foundTempo.tempo * 60 / beatBaseItem.mult * 10) / 10;
+            }
+      }
 
       function applyTempoChanges()
       {
@@ -149,7 +180,9 @@ MuseScore {
             }
             selection = {
                   start: cursor.tick,
-                  end: null
+                  startSeg: cursor.segment,
+                  end: null,
+                  endSeg: null
             };
             cursor.rewind(2); //find end of selection
             if (cursor.tick == 0) {
@@ -158,9 +191,11 @@ MuseScore {
                   // rewind(2) goes behind the last segment (where
                   // there's none) and sets tick=0
                   selection.end = curScore.lastSegment.tick + 1;
+                  selection.endSeg = curScore.lastSegment;
             }
             else {
                   selection.end = cursor.tick;
+                  selection.endSeg = cursor.segment;
             }
             return selection;
       }
