@@ -65,7 +65,7 @@ MuseScore {
                   segment = segment.prev;
             }
             if (foundTempo !== undefined) {
-                  startBPMvalue.placeholderText = Math.round(foundTempo.tempo * 60 / beatBaseItem.mult * 10) / 10;
+                  startBPMvalue.text = Math.round(foundTempo.tempo * 60 / beatBaseItem.mult * 10) / 10;
             }
             // End Tempo
             foundTempo = undefined
@@ -75,7 +75,7 @@ MuseScore {
                   segment = segment.next;
             }
             if (foundTempo !== undefined) {
-                  endBPMvalue.placeholderText = Math.round(foundTempo.tempo * 60 / beatBaseItem.mult * 10) / 10;
+                  endBPMvalue.text = Math.round(foundTempo.tempo * 60 / beatBaseItem.mult * 10) / 10;
             }
       }
 
@@ -256,271 +256,271 @@ MuseScore {
             }
       }
 
-      GridLayout {
+            
+      Item {
+            focus: true
+            Keys.onEscapePressed: {
+                  Qt.quit();
+            }
+            
+            Keys.onReturnPressed: {
+                  applyTempoChanges();
+                  Qt.quit();
+            }
+      
+            GridLayout {
             id: 'mainLayout'
             anchors.fill: parent
             anchors.margins: 10
             columns: 3
 
-            Label {
-                  text: qsTranslate("Ms::MuseScore", "Staff Text") + ":"
-            }
-            TextField {
-                  id: startTextValue
-                  placeholderText: 'rit. / accel.'
-                  implicitHeight: 24
-            }
-            Canvas {
-                  id: canvas
-                  Layout.rowSpan: 4
-                  Layout.minimumWidth: 102
-                  Layout.minimumHeight: 102
-                  Layout.fillWidth: true
-                  Layout.fillHeight: true
-                  
-                  onPaint: {
-                        var w = canvas.width;
-                        var h = canvas.height;
-                        var ctx = getContext("2d");
-
-                        //square plot area
-                        var length = (w > h) ? h : w;
-                        var top = (h - length) / 2;
-                        var left = (w - length) / 2;
-                        ctx.clearRect(0, 0, w, h);
-                        ctx.fillStyle = '#555555';
-                        ctx.fillRect(left, top, length, length);
-                        ctx.strokeStyle = '#000000';
-                        ctx.lineWidth = 1;
-                        ctx.strokeRect(left, top, length, length);
-
-                        //grid lines
-                        ctx.strokeStyle = '#888888';
-                        ctx.beginPath();
-                        var divisions = 4;
-                        for (var i = divisions - 1; i > 0; --i) {
-                              //vertical
-                              ctx.moveTo(left + ((i*length)/divisions), top);
-                              ctx.lineTo(left + ((i*length)/divisions), top+length);
-                              //horizontal
-                              ctx.moveTo(left         , top + ((i*length)/divisions));
-                              ctx.lineTo(left + length, top + ((i*length)/divisions));
-                        }
-                        ctx.stroke();
-
-                        //graph
-                        ctx.strokeStyle = '#abd3fb';
-                        ctx.lineWidth = 2;
-                        var start = getFloatFromInput(startBPMvalue);
-                        var end = getFloatFromInput(endBPMvalue);
-                        var midPoint = ((curveType.isLinear) ? 50.0 : midpointSlider.value) / 100;
-                        ctx.beginPath();
-                        ctx.moveTo(left + length, (start > end) ? top + length : top);
-                        for (var x = length; x >= 0; --x) {
-                              var outputPct = Math.pow((x / length), (Math.log(0.5) / Math.log(midPoint)));
-                              var newY = (start > end) ? (top + (outputPct * length)) : (top + length - (outputPct * length));
-                              ctx.lineTo(left + x, newY);
-                        }
-                        ctx.stroke();
+                  Label {
+                        text: qsTranslate("Ms::MuseScore", "Staff Text") + ":"
+                  }
+                  TextField {
+                        id: startTextValue
+                        text: 'rit.'
+                        implicitHeight: 24
+                  }
+                  Canvas {
+                        id: canvas
+                        Layout.rowSpan: 4
+                        Layout.minimumWidth: 102
+                        Layout.minimumHeight: 102
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
                         
-                        //write BPMs
-                        canvasStartBPM.text = start;
-                        canvasStartBPM.topPadding = (start > end) ? (top + 2) : (top + length - canvasStartBPM.contentHeight - 2);
-                        canvasEndBPM.text = end;
-                        canvasEndBPM.topPadding = (start > end) ? (top + length - canvasEndBPM.contentHeight - 2): (top + 2);
-                        //keep them inside the grid or is there enough room next to it?
-                        var longestBPMText = Math.max(canvasStartBPM.contentWidth, canvasEndBPM.contentWidth);
-                        if ((longestBPMText + 2 + 2) < left) {
-                              //outside
-                              canvasStartBPM.leftPadding = left - 2 - canvasStartBPM.contentWidth;
-                              canvasEndBPM.leftPadding = left - 2 - canvasEndBPM.contentWidth;
-                        }
-                        else {
-                              //inside
-                              canvasStartBPM.leftPadding = left + 2;
-                              canvasEndBPM.leftPadding = left + 2;
-                        }
-                  }
-                  Label {
-                        id: canvasStartBPM
-                        color: '#d8d8d8'
-                  }
-                  Label {
-                        id: canvasEndBPM
-                        color: '#d8d8d8'
-                  }
-            } //end of Canvas
+                        onPaint: {
+                              var w = canvas.width;
+                              var h = canvas.height;
+                              var ctx = getContext("2d");
 
-            Label {
-                  text: qsTr("BPM beat:")
-            }
-            ComboBox {
-                  id: beatBase
-                  model: ListModel {
-                        id: beatBaseList
-                        //mult is a tempo-multiplier compared to a crotchet      
-                        //ListElement { text: '\uECA0';               mult: 8     ; sym: '<sym>metNoteDoubleWhole</sym>' } // 2/1
-                        ListElement { text: '\uECA2';               mult: 4     ; sym: '<sym>metNoteWhole</sym>' } // 1/1
-                        //ListElement { text: '\uECA3 \uE1E7 \uE1E7'; mult: 3.5   ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/2..
-                        ListElement { text: '\uECA3 \uECB7';        mult: 3     ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym>' } // 1/2.
-                        ListElement { text: '\uECA3';               mult: 2     ; sym: '<sym>metNoteHalfUp</sym>' } // 1/2
-                        ListElement { text: '\uECA5 \uECB7 \uECB7'; mult: 1.75  ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/4..
-                        ListElement { text: '\uECA5 \uECB7';        mult: 1.5   ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym>' } // 1/4.
-                        ListElement { text: '\uECA5';               mult: 1     ; sym: '<sym>metNoteQuarterUp</sym>' } // 1/4
-                        ListElement { text: '\uECA7 \uECB7 \uECB7'; mult: 0.875 ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/8..
-                        ListElement { text: '\uECA7 \uECB7';        mult: 0.75  ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym>' } // 1/8.
-                        ListElement { text: '\uECA7';               mult: 0.5   ; sym: '<sym>metNote8thUp</sym>' } // 1/8
-                        ListElement { text: '\uECA9 \uECB7 \uECB7'; mult: 0.4375; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } //1/16..
-                        ListElement { text: '\uECA9 \uECB7';        mult: 0.375 ; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym>' } //1/16.
-                        ListElement { text: '\uECA9';               mult: 0.25  ; sym: '<sym>metNote16thUp</sym>' } //1/16
-                  }
-                  currentIndex: 5
-                  implicitHeight: 42
-                  style: ComboBoxStyle {
-                        textColor: '#000000'
-                        selectedTextColor: '#000000'
-                        font.family: 'MScore Text'
-                        font.pointSize: 18
-                        padding.top: 5
-                        padding.bottom: 5
-                  }
-            }
+                              //square plot area
+                              var length = (w > h) ? h : w;
+                              var top = (h - length) / 2;
+                              var left = (w - length) / 2;
+                              ctx.clearRect(0, 0, w, h);
+                              ctx.fillStyle = '#555555';
+                              ctx.fillRect(left, top, length, length);
+                              ctx.strokeStyle = '#000000';
+                              ctx.lineWidth = 1;
+                              ctx.strokeRect(left, top, length, length);
 
-            Label {
-                  text: qsTr("Start BPM:")
-            }
-            TextField {
-                  id: startBPMvalue
-                  placeholderText: '120'
-                  validator: DoubleValidator { bottom: 1;/* top: 512;*/ decimals: 1; notation: DoubleValidator.StandardNotation; }
-                  implicitHeight: 24
-                  onTextChanged: { canvas.requestPaint(); }
-            }
-
-            Label {
-                  text: qsTr("End BPM:")
-            }
-            TextField {
-                  id: endBPMvalue
-                  placeholderText: '60'
-                  validator: DoubleValidator { bottom: 1;/* top: 512;*/ decimals: 1; notation: DoubleValidator.StandardNotation; }
-                  implicitHeight: 24
-                  onTextChanged: { canvas.requestPaint(); }
-            }
-
-            ComboBox {
-                  id: curveType
-                  model: ListModel {
-                        ListElement { text: qsTr("Linear") }
-                        ListElement { text: qsTr("Curved") }
-                  }
-                  Layout.preferredWidth: 80
-
-                  property bool isLinear: {
-                        return (curveType.currentText === qsTr("Linear"));
-                  }
-
-                  onCurrentIndexChanged: {
-                        canvas.requestPaint();
-                  }
-            }
-            Label {
-                  text: qsTr("midpoint:")
-                  Layout.alignment: Qt.AlignRight
-            }
-            Slider {
-                  id: midpointSlider
-                  Layout.fillWidth: true
-
-                  minimumValue: 1
-                  maximumValue: 99
-                  value: 75.0
-                  stepSize: 0.1
-
-                  enabled: !curveType.isLinear
-                  
-                  style: SliderStyle {
-                        groove: Rectangle { //background
-                              id: grooveRect
-                              implicitHeight: 6
-                              color: (enabled) ? '#555555' : '#565656'
-                              radius: implicitHeight
-                              border {
-                                    color: '#888888'
-                                    width: 1
+                              //grid lines
+                              ctx.strokeStyle = '#888888';
+                              ctx.beginPath();
+                              var divisions = 4;
+                              for (var i = divisions - 1; i > 0; --i) {
+                                    //vertical
+                                    ctx.moveTo(left + ((i*length)/divisions), top);
+                                    ctx.lineTo(left + ((i*length)/divisions), top+length);
+                                    //horizontal
+                                    ctx.moveTo(left         , top + ((i*length)/divisions));
+                                    ctx.lineTo(left + length, top + ((i*length)/divisions));
                               }
+                              ctx.stroke();
+
+                              //graph
+                              ctx.strokeStyle = '#abd3fb';
+                              ctx.lineWidth = 2;
+                              var start = getFloatFromInput(startBPMvalue);
+                              var end = getFloatFromInput(endBPMvalue);
+                              var midPoint = ((curveType.isLinear) ? 50.0 : midpointSlider.value) / 100;
+                              ctx.beginPath();
+                              ctx.moveTo(left + length, (start > end) ? top + length : top);
+                              for (var x = length; x >= 0; --x) {
+                                    var outputPct = Math.pow((x / length), (Math.log(0.5) / Math.log(midPoint)));
+                                    var newY = (start > end) ? (top + (outputPct * length)) : (top + length - (outputPct * length));
+                                    ctx.lineTo(left + x, newY);
+                              }
+                              ctx.stroke();
                               
-                              Rectangle {
-                                    //value fill
-                                    implicitHeight: grooveRect.implicitHeight
-                                    implicitWidth: styleData.handlePosition
-                                    color: (enabled) ? '#abd3fb' : '#567186'
-                                    radius: grooveRect.radius
+                              //write BPMs
+                              canvasStartBPM.text = start;
+                              canvasStartBPM.topPadding = (start > end) ? (top + 2) : (top + length - canvasStartBPM.contentHeight - 2);
+                              canvasEndBPM.text = end;
+                              canvasEndBPM.topPadding = (start > end) ? (top + length - canvasEndBPM.contentHeight - 2): (top + 2);
+                              //keep them inside the grid or is there enough room next to it?
+                              var longestBPMText = Math.max(canvasStartBPM.contentWidth, canvasEndBPM.contentWidth);
+                              if ((longestBPMText + 2 + 2) < left) {
+                                    //outside
+                                    canvasStartBPM.leftPadding = left - 2 - canvasStartBPM.contentWidth;
+                                    canvasEndBPM.leftPadding = left - 2 - canvasEndBPM.contentWidth;
+                              }
+                              else {
+                                    //inside
+                                    canvasStartBPM.leftPadding = left + 2;
+                                    canvasEndBPM.leftPadding = left + 2;
+                              }
+                        }
+                        Label {
+                              id: canvasStartBPM
+                              color: '#d8d8d8'
+                        }
+                        Label {
+                              id: canvasEndBPM
+                              color: '#d8d8d8'
+                        }
+                  } //end of Canvas
+
+                  Label {
+                        text: qsTr("BPM beat:")
+                  }
+                  ComboBox {
+                        id: beatBase
+                        model: ListModel {
+                              id: beatBaseList
+                              //mult is a tempo-multiplier compared to a crotchet      
+                              //ListElement { text: '\uECA0';               mult: 8     ; sym: '<sym>metNoteDoubleWhole</sym>' } // 2/1
+                              ListElement { text: '\uECA2';               mult: 4     ; sym: '<sym>metNoteWhole</sym>' } // 1/1
+                              //ListElement { text: '\uECA3 \uE1E7 \uE1E7'; mult: 3.5   ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/2..
+                              ListElement { text: '\uECA3 \uECB7';        mult: 3     ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym>' } // 1/2.
+                              ListElement { text: '\uECA3';               mult: 2     ; sym: '<sym>metNoteHalfUp</sym>' } // 1/2
+                              ListElement { text: '\uECA5 \uECB7 \uECB7'; mult: 1.75  ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/4..
+                              ListElement { text: '\uECA5 \uECB7';        mult: 1.5   ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym>' } // 1/4.
+                              ListElement { text: '\uECA5';               mult: 1     ; sym: '<sym>metNoteQuarterUp</sym>' } // 1/4
+                              ListElement { text: '\uECA7 \uECB7 \uECB7'; mult: 0.875 ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/8..
+                              ListElement { text: '\uECA7 \uECB7';        mult: 0.75  ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym>' } // 1/8.
+                              ListElement { text: '\uECA7';               mult: 0.5   ; sym: '<sym>metNote8thUp</sym>' } // 1/8
+                              ListElement { text: '\uECA9 \uECB7 \uECB7'; mult: 0.4375; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } //1/16..
+                              ListElement { text: '\uECA9 \uECB7';        mult: 0.375 ; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym>' } //1/16.
+                              ListElement { text: '\uECA9';               mult: 0.25  ; sym: '<sym>metNote16thUp</sym>' } //1/16
+                        }
+                        currentIndex: 5
+                        implicitHeight: 42
+                        style: ComboBoxStyle {
+                              textColor: '#000000'
+                              selectedTextColor: '#000000'
+                              font.family: 'MScore Text'
+                              font.pointSize: 18
+                              padding.top: 5
+                              padding.bottom: 5
+                        }
+                  }
+
+                  Label {
+                        text: qsTr("Start BPM:")
+                  }
+                  TextField {
+                        id: startBPMvalue
+                        placeholderText: '120'
+                        validator: DoubleValidator { bottom: 1;/* top: 512;*/ decimals: 1; notation: DoubleValidator.StandardNotation; }
+                        implicitHeight: 24
+                        onTextChanged: { canvas.requestPaint(); }
+                  }
+
+                  Label {
+                        text: qsTr("End BPM:")
+                  }
+                  TextField {
+                        id: endBPMvalue
+                        placeholderText: '60'
+                        validator: DoubleValidator { bottom: 1;/* top: 512;*/ decimals: 1; notation: DoubleValidator.StandardNotation; }
+                        implicitHeight: 24
+                        onTextChanged: { canvas.requestPaint(); }
+                  }
+
+                  ComboBox {
+                        id: curveType
+                        model: ListModel {
+                              ListElement { text: qsTr("Linear") }
+                              ListElement { text: qsTr("Curved") }
+                        }
+                        Layout.preferredWidth: 80
+
+                        property bool isLinear: {
+                              return (curveType.currentText === qsTr("Linear"));
+                        }
+
+                        onCurrentIndexChanged: {
+                              canvas.requestPaint();
+                        }
+                  }
+                  Label {
+                        text: qsTr("midpoint:")
+                        Layout.alignment: Qt.AlignRight
+                  }
+                  Slider {
+                        id: midpointSlider
+                        Layout.fillWidth: true
+
+                        minimumValue: 1
+                        maximumValue: 99
+                        value: 75.0
+                        stepSize: 0.1
+
+                        enabled: !curveType.isLinear
+                        
+                        style: SliderStyle {
+                              groove: Rectangle { //background
+                                    id: grooveRect
+                                    implicitHeight: 6
+                                    color: (enabled) ? '#555555' : '#565656'
+                                    radius: implicitHeight
                                     border {
                                           color: '#888888'
                                           width: 1
                                     }
+                                    
+                                    Rectangle {
+                                          //value fill
+                                          implicitHeight: grooveRect.implicitHeight
+                                          implicitWidth: styleData.handlePosition
+                                          color: (enabled) ? '#abd3fb' : '#567186'
+                                          radius: grooveRect.radius
+                                          border {
+                                                color: '#888888'
+                                                width: 1
+                                          }
+                                    }
+                              }
+                              handle: Rectangle {
+                                    anchors.centerIn: parent
+                                    color: (enabled) ? (control.pressed ? '#ffffff': '#d8d8d8') : '#565656'
+                                    border.color: '#666666'
+                                    border.width: 1
+                                    implicitWidth: 16
+                                    implicitHeight: 16
+                                    radius: 8
                               }
                         }
-                        handle: Rectangle {
-                              anchors.centerIn: parent
-                              color: (enabled) ? (control.pressed ? '#ffffff': '#d8d8d8') : '#565656'
-                              border.color: '#666666'
-                              border.width: 1
-                              implicitWidth: 16
-                              implicitHeight: 16
-                              radius: 8
+                  }
+
+                  Label { 
+                        Layout.columnSpan: 2 //just taking up two cells to make the next element align
+                  }
+                  RowLayout {
+                        Layout.alignment: Qt.AlignHCenter
+
+                        SpinBox {
+                              id: sliderValue
+                              Layout.preferredWidth: 60
+
+                              minimumValue: midpointSlider.minimumValue
+                              maximumValue: midpointSlider.maximumValue
+                              value: midpointSlider.value
+                              decimals: 1
+                              stepSize: midpointSlider.stepSize
+
+                              onValueChanged: {
+                                    midpointSlider.value = value;
+                                    canvas.requestPaint();
+                              }
+
+                              enabled: !curveType.isLinear
+                        }
+                        Label { text: '%' }
+                  }
+
+                  Button {
+                        id: applyButton
+                        Layout.columnSpan: 3
+                        text: qsTranslate("PrefsDialogBase", "Apply")
+                        onClicked: {
+                              applyTempoChanges();
+                              Qt.quit();
                         }
                   }
             }
-
-            Label { 
-                  Layout.columnSpan: 2 //just taking up two cells to make the next element align
-            }
-            RowLayout {
-                  Layout.alignment: Qt.AlignHCenter
-
-                  SpinBox {
-                        id: sliderValue
-                        Layout.preferredWidth: 60
-
-                        minimumValue: midpointSlider.minimumValue
-                        maximumValue: midpointSlider.maximumValue
-                        value: midpointSlider.value
-                        decimals: 1
-                        stepSize: midpointSlider.stepSize
-
-                        onValueChanged: {
-                              midpointSlider.value = value;
-                              canvas.requestPaint();
-                        }
-
-                        enabled: !curveType.isLinear
-                  }
-                  Label { text: '%' }
-            }
-
-            Button {
-                  id: applyButton
-                  Layout.columnSpan: 3
-                  text: qsTranslate("PrefsDialogBase", "Apply")
-                  onClicked: {
-                        applyTempoChanges();
-                        Qt.quit();
-                  }
-            }
-
-      }
-
-      Keys.onEscapePressed: {
-            Qt.quit();
-      }
-      Keys.onReturnPressed: {
-            applyTempoChanges();
-            Qt.quit();
-      }
-      Keys.onEnterPressed: {
-            applyTempoChanges();
-            Qt.quit();
       }
 }
