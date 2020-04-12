@@ -269,6 +269,13 @@ MuseScore {
                   id: startTextValue
                   placeholderText: 'rit. / accel.'
                   implicitHeight: 24
+                  onAccepted: {
+                        applyTempoChanges();
+                        Qt.quit();
+                  }
+                  Keys.onEscapePressed: {
+                        Qt.quit();
+                  }
             }
             Canvas {
                   id: canvas
@@ -395,6 +402,13 @@ MuseScore {
                   validator: DoubleValidator { bottom: 1;/* top: 512;*/ decimals: 1; notation: DoubleValidator.StandardNotation; }
                   implicitHeight: 24
                   onTextChanged: { canvas.requestPaint(); }
+                  onAccepted: {
+                        applyTempoChanges();
+                        Qt.quit();
+                  }
+                  Keys.onEscapePressed: {
+                        Qt.quit();
+                  }
             }
 
             Label {
@@ -406,6 +420,13 @@ MuseScore {
                   validator: DoubleValidator { bottom: 1;/* top: 512;*/ decimals: 1; notation: DoubleValidator.StandardNotation; }
                   implicitHeight: 24
                   onTextChanged: { canvas.requestPaint(); }
+                  onAccepted: {
+                        applyTempoChanges();
+                        Qt.quit();
+                  }
+                  Keys.onEscapePressed: {
+                        Qt.quit();
+                  }
             }
 
             ComboBox {
