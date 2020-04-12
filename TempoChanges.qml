@@ -17,7 +17,7 @@ import MuseScore 3.0
 
 MuseScore {
       menuPath: "Plugins.TempoChanges"
-      version: "3.1.4"
+      version: "3.2.0"
       description: qsTr("Creates hidden tempo markers.\nSee also: https://musescore.org/en/handbook/3/tempo#ritardando-accelerando")
       pluginType: "dialog"
       requiresScore: true
@@ -261,6 +261,8 @@ MuseScore {
             anchors.fill: parent
             anchors.margins: 10
             columns: 3
+
+            focus: true
 
             Label {
                   text: qsTranslate("Ms::MuseScore", "Staff Text") + ":"
