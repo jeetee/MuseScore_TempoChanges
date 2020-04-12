@@ -262,6 +262,8 @@ MuseScore {
             anchors.margins: 10
             columns: 3
 
+            focus: true
+
             Label {
                   text: qsTranslate("Ms::MuseScore", "Staff Text") + ":"
             }
@@ -510,5 +512,17 @@ MuseScore {
                   }
             }
 
+      }
+
+      Keys.onEscapePressed: {
+            Qt.quit();
+      }
+      Keys.onReturnPressed: {
+            applyTempoChanges();
+            Qt.quit();
+      }
+      Keys.onEnterPressed: {
+            applyTempoChanges();
+            Qt.quit();
       }
 }
