@@ -511,4 +511,16 @@ MuseScore {
             }
 
       }
+
+      Keys.onEscapePressed: {
+            Qt.quit();
+      }
+      Keys.onReturnPressed: {
+            applyTempoChanges();
+            Qt.quit();
+      }
+      Keys.onEnterPressed: {
+            applyTempoChanges();
+            Qt.quit();
+      }
 }
