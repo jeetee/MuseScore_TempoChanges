@@ -23,6 +23,7 @@ MuseScore {
       requiresScore: true
 
       property int margin: 10
+      property int previousBeatIndex: 5
 
       width:  360
       height: 240
@@ -385,6 +386,22 @@ MuseScore {
                         font.pointSize: 18
                         padding.top: 5
                         padding.bottom: 5
+                  }
+                  onCurrentIndexChanged: { // update the value fields to match the new beatBase
+                        var changeFactor = beatBase.model.get(currentIndex).mult / beatBase.model.get(previousBeatIndex).mult;
+                        if (startBPMvalue.text == "") {
+                              startBPMvalue.placeholderText = Math.round(getFloatFromInput(startBPMvalue) / changeFactor * 10) / 10;
+                        }
+                        else {
+                              startBPMvalue.text = Math.round(getFloatFromInput(startBPMvalue) / changeFactor * 10) / 10;
+                        }
+                        if (endBPMvalue.text == "") {
+                              endBPMvalue.placeholderText = Math.round(getFloatFromInput(endBPMvalue) / changeFactor * 10) / 10;
+                        }
+                        else {
+                              endBPMvalue.text = Math.round(getFloatFromInput(endBPMvalue) / changeFactor * 10) / 10;
+                        }
+                        previousBeatIndex = currentIndex; // keep track reference for next change
                   }
             }
 
