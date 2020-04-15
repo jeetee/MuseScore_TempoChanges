@@ -66,6 +66,16 @@ MuseScore {
                   segment = segment.prev;
             }
             if (foundTempo !== undefined) {
+                  console.log('Found start tempo text = ' + foundTempo.text);
+                  // Try to extract base beat
+                  var targetBeatBaseIndex = findBeatBaseFromMarking(foundTempo);
+                  if (targetBeatBaseIndex != -1) {
+                        // Apply it
+                        previousBeatIndex = targetBeatBaseIndex;
+                        beatBase.currentIndex = targetBeatBaseIndex;
+                        beatBaseItem = beatBase.model.get(targetBeatBaseIndex);
+                  }
+                  // Update input field according to the (detected) beat
                   startBPMvalue.placeholderText = Math.round(foundTempo.tempo * 60 / beatBaseItem.mult * 10) / 10;
             }
             // End Tempo
@@ -76,8 +86,54 @@ MuseScore {
                   segment = segment.next;
             }
             if (foundTempo !== undefined) {
+                  console.log('Found end tempo text = ' + foundTempo.text);
                   endBPMvalue.placeholderText = Math.round(foundTempo.tempo * 60 / beatBaseItem.mult * 10) / 10;
             }
+      }
+
+      /// Analyses tempo marking text to attempt to discover the base beat being used
+      /// If a beat is detected, returns the index in the beatBaseList matching the marking
+      /// @returns -1 if beat is not detected or not present in our beatBaseList
+      function findBeatBaseFromMarking(tempoMarking)
+      {
+            var metronomeMarkIndex = -1;
+            // First look for metronome marking symbols
+            var foundTempoText = tempoMarking.text.replace('<sym>space</sym>', '');
+            var foundMetronomeSymbols = foundTempoText.match(/(<sym>met.*<\/sym>)+/g);
+            if (foundMetronomeSymbols !== null) {
+                  // Locate the index in our dropdown matching the found beatString
+                  for (metronomeMarkIndex = beatBase.model.count; --metronomeMarkIndex >= 0; ) {
+                        if (beatBase.model.get(metronomeMarkIndex).sym == foundMetronomeSymbols[0]) {
+                              break; // Found this marking in the dropdown at metronomeMarkIndex
+                        }
+                  }
+            }
+            else {
+                  // Metronome marking symbols are substituted with their character entity if the text was edited
+                  // UTF-16 range [\uECA0 - \uECB6] (double whole - 1024th)
+                  for (var beatString, charidx = 0; charidx < foundTempoText.length; charidx++) {
+                        beatString = foundTempoText[charidx];
+                        if ((beatString >= "\uECA2") && (beatString <= "\uECA9")) {
+                              // Found base tempo - continue looking for augmentation dots
+                              while (++charidx < foundTempoText.length) {
+                                    if (foundTempoText[charidx] == "\uECB7") {
+                                          beatString += " \uECB7";
+                                    }
+                                    else if (foundTempoText[charidx] != ' ') {
+                                          break; // No longer augmentation dots or spaces
+                                    }
+                              }
+                              // Locate the index in our dropdown matching the found beatString
+                              for (metronomeMarkIndex = beatBase.model.count; --metronomeMarkIndex >= 0; ) {
+                                    if (beatBase.model.get(metronomeMarkIndex).text == beatString) {
+                                          break; // Found this marking in the dropdown at metronomeMarkIndex
+                                    }
+                              }
+                              break; // Done processing base tempo
+                        }
+                  }
+            }
+            return metronomeMarkIndex;
       }
 
       function applyTempoChanges()
@@ -364,7 +420,7 @@ MuseScore {
                         //mult is a tempo-multiplier compared to a crotchet      
                         //ListElement { text: '\uECA0';               mult: 8     ; sym: '<sym>metNoteDoubleWhole</sym>' } // 2/1
                         ListElement { text: '\uECA2';               mult: 4     ; sym: '<sym>metNoteWhole</sym>' } // 1/1
-                        //ListElement { text: '\uECA3 \uE1E7 \uE1E7'; mult: 3.5   ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/2..
+                        //ListElement { text: '\uECA3 \uECB7 \uECB7'; mult: 3.5   ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/2..
                         ListElement { text: '\uECA3 \uECB7';        mult: 3     ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym>' } // 1/2.
                         ListElement { text: '\uECA3';               mult: 2     ; sym: '<sym>metNoteHalfUp</sym>' } // 1/2
                         ListElement { text: '\uECA5 \uECB7 \uECB7'; mult: 1.75  ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/4..
