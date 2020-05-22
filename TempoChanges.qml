@@ -11,16 +11,18 @@ import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.3
 import QtQuick.Layouts 1.1
+import QtQuick.Window 2.2
 import Qt.labs.settings 1.0
 
 import MuseScore 3.0
 
 MuseScore {
       menuPath: "Plugins.TempoChanges"
-      version: "3.3.1"
+      version: "3.4.0"
       description: qsTr("Creates hidden tempo markers.\nSee also: https://musescore.org/en/handbook/3/tempo#ritardando-accelerando")
       pluginType: "dialog"
       requiresScore: true
+      id: 'pluginId'
 
       property int margin: 10
       property int previousBeatIndex: 5
@@ -31,7 +33,8 @@ MuseScore {
       onRun: {
             if ((mscoreMajorVersion == 3) && (mscoreMinorVersion == 0) && (mscoreUpdateVersion < 5)) {
                   console.log(qsTr("Unsupported MuseScore version.\nTempoChanges needs v3.0.5 or above.\n"));
-                  Qt.quit();
+                  pluginId.parent.Window.window.close();
+                  return;
             }
             prefillSurroundingTempo();
       }
@@ -581,21 +584,21 @@ MuseScore {
                   text: qsTranslate("PrefsDialogBase", "Apply")
                   onClicked: {
                         applyTempoChanges();
-                        Qt.quit();
+                        pluginId.parent.Window.window.close();
                   }
             }
 
       }
 
       Keys.onEscapePressed: {
-            Qt.quit();
+            pluginId.parent.Window.window.close();
       }
       Keys.onReturnPressed: {
             applyTempoChanges();
-            Qt.quit();
+            pluginId.parent.Window.window.close();
       }
       Keys.onEnterPressed: {
             applyTempoChanges();
-            Qt.quit();
+            pluginId.parent.Window.window.close();
       }
 }
