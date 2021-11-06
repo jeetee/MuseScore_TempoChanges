@@ -3,7 +3,7 @@
 echo -ne "
     ╔══════════════════════════════════════╗
     ║                                      ║
-    ║ Linux/MacOS Translation utility 1.0  ║
+    ║  Linux/macOS Translation utility 1.0 ║
     ║     Powered by David Copperfield     ║
     ║           A MuseScore User           ║
     ║                                      ║
@@ -14,14 +14,14 @@ function Countdown() { # Countdown timer, format: Countdown [time in sec]
     while [[ $_countdown -gt 0 ]]; do
         echo -ne "The programme will exit in $_countdown sec."
         ((_countdown--))
-        sleep 1 #time interval
+        sleep 1 # time interval
         echo -ne "\r"
     done
 }
 function Confirmation() { # Process Yes/No/Quit response
     while :; do
         echo -e "Confirm? (y/n) "
-        read
+        read -p "   "
         case ${REPLY} in
         [Yy]* | [Oo][Kk] | 1) # Approved
             return 3
@@ -42,21 +42,34 @@ function Confirmation() { # Process Yes/No/Quit response
 # Functions End
 
 # ===== Modules ====
-Check_bin() {                             #Check if the bin path exists
-    bin_path=$HOME/Qt/5.15.2/clang_64/bin # Default bin path
-
-    until [[ -d $bin_path ]]; do # Find the default bin path
-        echo =========
-        echo -e "\033[31mPath to lupdate not found.\033[0m"
-        echo -e "Please provide a path to /Qt/(version)/clang_64/bin."
-        read bin_path
-    done
-
-    export PATH="$PATH":$bin_path # Set user defined bin path
+Check_bin() { # Check if the bin path exists
+    bin_exists=$(which lupdate)
+    if [[ $bin_exists ]]; then
+        bin_path=$(dirname "$bin_exists")
+    else
+        echo -e "\033[35mlupdate / lrelease not in PATH\033[0m"
+        case $(uname -s) in
+        Darwin) # Default bin path for macOS
+            bin_path=$HOME/Qt/5.15.2/clang_64/bin
+            ;;
+            # Linux)
+            # # Default path support for Linux will be added in the future.
+            # ;;
+        esac 
+        # Confirm the existence of the default path
+        until [[ -d $bin_path ]]; do
+            echo =========
+            echo -e "\033[31mPath to lupdate / lrelease not found.\033[0m This utility requires lupdate / lrelease."
+            echo -e "Please provide a path to the location of the lupdate / lrelease programs"
+            read -p "   " bin_path
+        done
+        export PATH="$PATH":$bin_path # Set temporary path
+    fi
 }
 Lupdate() { # Generating/Updating .ts files
     while :; do
-        read -rp "Input your language code: "
+        echo -e "Input example: \033[33mde, fr, zh-cn\033[0m\nInput \033[33m\*\033[0m to re-generate .ts files for existed languages."
+        read -rp "  Input your language code: "
         case $REPLY in
         \* | all) # Update all existed .ts files
             ts_name=$(find . -name "*.ts")
@@ -92,7 +105,7 @@ Main() {
     Check_bin
     while :; do
         echo -e "Choose the mode:\n1. Generate .ts files.\n2. Update .qm files."
-        read
+        read -p "   "
         case $REPLY in
         1 | lupdate)
             Lupdate
