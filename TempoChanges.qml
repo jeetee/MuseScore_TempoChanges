@@ -17,7 +17,7 @@ import Qt.labs.settings 1.0
 import MuseScore 3.0
 
 MuseScore {
-      menuPath: "Plugins.TempoChanges"
+      menuPath: "Plugins."+qsTr("TempoChanges")
       version: "3.4.0"
       description: qsTr("Creates hidden tempo markers.\nSee also: https://musescore.org/en/handbook/3/tempo#ritardando-accelerando")
       pluginType: "dialog"

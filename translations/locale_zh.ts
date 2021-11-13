@@ -4,30 +4,35 @@
 <context>
     <name>Ms::MuseScore</name>
     <message>
-        <location filename="../TempoChanges.qml" line="+231"/>
+        <location filename="../TempoChanges.qml" line="+328"/>
         <source>Staff Text</source>
-        <translation type="unfinished"></translation>
+        <translation>谱表文本</translation>
     </message>
 </context>
 <context>
     <name>PrefsDialogBase</name>
     <message>
-        <location line="+240"/>
+        <location line="+256"/>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>应用</translation>
     </message>
 </context>
 <context>
     <name>TempoChanges</name>
     <message>
-        <location line="-450"/>
+        <location line="-564"/>
+        <source>TempoChanges</source>
+        <translation>渐快渐慢</translation>
+    </message>
+    <message>
+        <location line="+2"/>
         <source>Creates hidden tempo markers.
 See also: https://musescore.org/en/handbook/3/tempo#ritardando-accelerando</source>
         <translation>创建隐藏的速度记号。
 参见：https://musescore.org/zh-hans/node/278604#ritardando-accelerando</translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="+13"/>
         <source>Unsupported MuseScore version.
 TempoChanges needs v3.0.5 or above.
 </source>
@@ -36,12 +41,12 @@ TempoChanges needs v3.0.5 or above.
 </translation>
     </message>
     <message>
-        <location line="+288"/>
+        <location line="+382"/>
         <source>BPM beat:</source>
         <translation>BPM类型：</translation>
     </message>
     <message>
-        <location line="+35"/>
+        <location line="+51"/>
         <source>Start BPM:</source>
         <translation>起始BPM：</translation>
     </message>
@@ -54,7 +59,7 @@ TempoChanges needs v3.0.5 or above.
         <location line="+13"/>
         <location line="+6"/>
         <source>Linear</source>
-        <translation>线性</translation>
+        <translation>直线</translation>
     </message>
     <message>
         <location line="-5"/>
