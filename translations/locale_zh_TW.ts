@@ -4,9 +4,9 @@
 <context>
     <name>Ms::MuseScore</name>
     <message>
-        <location filename="../TempoChanges.qml" line="+325"/>
+        <location filename="../TempoChanges.qml" line="+328"/>
         <source>Staff Text</source>
-        <translation type="unfinished"></translation>
+        <translation>譜表文本</translation>
     </message>
 </context>
 <context>
@@ -14,28 +14,33 @@
     <message>
         <location line="+256"/>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>套用</translation>
     </message>
 </context>
 <context>
     <name>TempoChanges</name>
     <message>
-        <location line="-560"/>
+        <location line="-564"/>
+        <source>TempoChanges</source>
+        <translation>漸快漸緩</translation>
+    </message>
+    <message>
+        <location line="+2"/>
         <source>Creates hidden tempo markers.
 See also: https://musescore.org/en/handbook/3/tempo#ritardando-accelerando</source>
         <translation>建立隱藏的速度標記。
 參見：https://musescore.org/zh-hant/node/278604#ritardando-accelerando</translation>
     </message>
     <message>
-        <location line="+12"/>
+        <location line="+13"/>
         <source>Unsupported MuseScore version.
 TempoChanges needs v3.0.5 or above.
 </source>
-        <translation>您使用的MuseScore版本過低（低於3.0.5），因此本插件無法運作！。
+        <translation>您使用的MuseScore版本低於3.0.5，因此本外掛模組無法運作！。
 </translation>
     </message>
     <message>
-        <location line="+381"/>
+        <location line="+382"/>
         <source>BPM beat:</source>
         <translation>BPM類型：</translation>
     </message>
@@ -53,7 +58,7 @@ TempoChanges needs v3.0.5 or above.
         <location line="+13"/>
         <location line="+6"/>
         <source>Linear</source>
-        <translation>線性</translation>
+        <translation>直線</translation>
     </message>
     <message>
         <location line="-5"/>
