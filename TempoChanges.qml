@@ -18,7 +18,7 @@ import MuseScore 3.0
 
 MuseScore {
       menuPath: "Plugins.TempoChanges"
-      version: "3.4.0"
+      version: "3.4.1"
       description: qsTr("Creates hidden tempo markers.\nSee also: https://musescore.org/en/handbook/3/tempo#ritardando-accelerando")
       pluginType: "dialog"
       requiresScore: true
@@ -309,7 +309,7 @@ MuseScore {
             }
             //changing of tempo can only happen after being added to the segment
             tempoElement.tempo = quarterBaseTempo / 60; //real tempo setting according to followText
-            tempoElement.followText = true; //allows for manual fiddling by the user afterwards
+            tempoElement.tempoFollowText = true; //allows for manual fiddling by the user afterwards
 
             if (tempoTracker) {
                   tempoTracker[quarterBaseTempo] = true;
