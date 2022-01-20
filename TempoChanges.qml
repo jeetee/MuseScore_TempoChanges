@@ -308,7 +308,7 @@ MuseScore {
                   cursor.add(tempoElement);
             }
             //changing of tempo can only happen after being added to the segment
-            tempoElement.tempo = quarterBaseTempo / 60; //real tempo setting according to followText
+            tempoElement.tempo = quarterBaseTempo / 60; //real tempo setting according to "Follow Text"
             tempoElement.tempoFollowText = true; //allows for manual fiddling by the user afterwards
 
             if (tempoTracker) {
