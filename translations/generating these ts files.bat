@@ -6,4 +6,5 @@ lupdate.exe -locations relative -no-obsolete ../ -ts locale_it.ts
 lupdate.exe -locations relative -no-obsolete ../ -ts locale_nl.ts
 lupdate.exe -locations relative -no-obsolete ../ -ts locale_zh.ts
 lupdate.exe -locations relative -no-obsolete ../ -ts locale_zh_TW.ts
+lupdate.exe -locations relative -no-obsolete ../ -ts locale_es.ts
 PAUSE
