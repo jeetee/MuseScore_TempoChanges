@@ -22,7 +22,7 @@ MuseScore {
       description: qsTr("Creates hidden tempo markers.\nSee also: https://musescore.org/en/handbook/3/tempo#ritardando-accelerando")
       pluginType: "dialog"
       requiresScore: true
-      id: 'pluginId'
+      id: pluginId
 
       property int margin: 10
       property int previousBeatIndex: 5
@@ -69,10 +69,10 @@ MuseScore {
                   segment = segment.prev;
             }
             if (foundTempo !== undefined) {
-                  console.log('Found start tempo text = ' + foundTempo.text);
+                  console.log("Found start tempo text = " + foundTempo.text);
                   // Try to extract base beat
                   var targetBeatBaseIndex = findBeatBaseFromMarking(foundTempo);
-                  if (targetBeatBaseIndex != -1) {
+                  if (targetBeatBaseIndex !== -1) {
                         // Apply it
                         previousBeatIndex = targetBeatBaseIndex;
                         beatBase.currentIndex = targetBeatBaseIndex;
@@ -89,7 +89,7 @@ MuseScore {
                   segment = segment.next;
             }
             if (foundTempo !== undefined) {
-                  console.log('Found end tempo text = ' + foundTempo.text);
+                  console.log("Found end tempo text = " + foundTempo.text);
                   endBPMvalue.placeholderText = Math.round(foundTempo.tempo * 60 / beatBaseItem.mult * 10) / 10;
             }
       }
@@ -101,12 +101,12 @@ MuseScore {
       {
             var metronomeMarkIndex = -1;
             // First look for metronome marking symbols
-            var foundTempoText = tempoMarking.text.replace('<sym>space</sym>', '');
+            var foundTempoText = tempoMarking.text.replace("<sym>space</sym>", "");
             var foundMetronomeSymbols = foundTempoText.match(/(<sym>met.*<\/sym>)+/g);
             if (foundMetronomeSymbols !== null) {
                   // Locate the index in our dropdown matching the found beatString
                   for (metronomeMarkIndex = beatBase.model.count; --metronomeMarkIndex >= 0; ) {
-                        if (beatBase.model.get(metronomeMarkIndex).sym == foundMetronomeSymbols[0]) {
+                        if (beatBase.model.get(metronomeMarkIndex).sym === foundMetronomeSymbols[0]) {
                               break; // Found this marking in the dropdown at metronomeMarkIndex
                         }
                   }
@@ -119,16 +119,16 @@ MuseScore {
                         if ((beatString >= "\uECA2") && (beatString <= "\uECA9")) {
                               // Found base tempo - continue looking for augmentation dots
                               while (++charidx < foundTempoText.length) {
-                                    if (foundTempoText[charidx] == "\uECB7") {
+                                    if (foundTempoText[charidx] === "\uECB7") {
                                           beatString += " \uECB7";
                                     }
-                                    else if (foundTempoText[charidx] != ' ') {
+                                    else if (foundTempoText[charidx] !== " ") {
                                           break; // No longer augmentation dots or spaces
                                     }
                               }
                               // Locate the index in our dropdown matching the found beatString
                               for (metronomeMarkIndex = beatBase.model.count; --metronomeMarkIndex >= 0; ) {
-                                    if (beatBase.model.get(metronomeMarkIndex).text == beatString) {
+                                    if (beatBase.model.get(metronomeMarkIndex).text === beatString) {
                                           break; // Found this marking in the dropdown at metronomeMarkIndex
                                     }
                               }
@@ -152,8 +152,8 @@ MuseScore {
             var startTempo = getTempoFromInput(startBPMvalue) * beatBaseItem.mult;
             var endTempo = getTempoFromInput(endBPMvalue) * beatBaseItem.mult;
             var tempoRange = (endTempo - startTempo);
-            console.log('Applying to selection [' + sel.start + ', ' + sel.end + '] = ' + durationTicks);
-            console.log(startTempo + ' (' + (startTempo*60) + ') -> ' + endTempo + ' (' + (endTempo*60) + ') = ' + tempoRange);
+            console.log("Applying to selection [" + sel.start + ", " + sel.end + "] = " + durationTicks);
+            console.log(startTempo + " (" + (startTempo*60) + ") -> " + endTempo + " (" + (endTempo*60) + ") = " + tempoRange);
 
             var cursor = curScore.newCursor();
             cursor.rewind(1); //start of selection
@@ -235,7 +235,7 @@ MuseScore {
             var cursor = curScore.newCursor();
             cursor.rewind(1); //start of selection
             if (!cursor.segment) { //no selection
-                  console.log('No selection');
+                  console.log("No selection");
                   return selection;
             }
             selection = {
@@ -245,7 +245,7 @@ MuseScore {
                   endSeg: null
             };
             cursor.rewind(2); //find end of selection
-            if (cursor.tick == 0) {
+            if (cursor.tick === 0) {
                   // this happens when the selection includes
                   // the last measure of the score.
                   // rewind(2) goes behind the last segment (where
@@ -263,7 +263,7 @@ MuseScore {
       function getFloatFromInput(input)
       {
             var value = input.text;
-            if (value == "") {
+            if (value === "") {
                   value = input.placeholderText;
             }
             return parseFloat(value);
@@ -300,9 +300,9 @@ MuseScore {
                        return;
                   }
             }
-            console.log(((addTempo)?'Applying new tempo: ' : 'Changing existing tempo into: ') + beatBaseTempo);
+            console.log(((addTempo)? "Applying new tempo: " : "Changing existing tempo into: ") + beatBaseTempo);
 
-            tempoElement.text = beatBaseItem.sym + ' = ' + beatBaseTempo;
+            tempoElement.text = beatBaseItem.sym + " = " + beatBaseTempo;
             tempoElement.visible = visible;
             if (addTempo) {
                   cursor.add(tempoElement);
@@ -317,7 +317,7 @@ MuseScore {
       }
 
       GridLayout {
-            id: 'mainLayout'
+            id: mainLayout
             anchors.fill: parent
             anchors.margins: 10
             columns: 3
@@ -329,7 +329,7 @@ MuseScore {
             }
             TextField {
                   id: startTextValue
-                  placeholderText: 'rit. / accel.'
+                  placeholderText: "rit. / accel."
                   implicitHeight: 24
             }
             Canvas {
@@ -350,14 +350,14 @@ MuseScore {
                         var top = (h - length) / 2;
                         var left = (w - length) / 2;
                         ctx.clearRect(0, 0, w, h);
-                        ctx.fillStyle = '#555555';
+                        ctx.fillStyle = "#555555";
                         ctx.fillRect(left, top, length, length);
-                        ctx.strokeStyle = '#000000';
+                        ctx.strokeStyle = "#000000";
                         ctx.lineWidth = 1;
                         ctx.strokeRect(left, top, length, length);
 
                         //grid lines
-                        ctx.strokeStyle = '#888888';
+                        ctx.strokeStyle = "#888888";
                         ctx.beginPath();
                         var divisions = 4;
                         for (var i = divisions - 1; i > 0; --i) {
@@ -371,7 +371,7 @@ MuseScore {
                         ctx.stroke();
 
                         //graph
-                        ctx.strokeStyle = '#abd3fb';
+                        ctx.strokeStyle = "#abd3fb";
                         ctx.lineWidth = 2;
                         var start = getFloatFromInput(startBPMvalue);
                         var end = getFloatFromInput(endBPMvalue);
@@ -405,11 +405,11 @@ MuseScore {
                   }
                   Label {
                         id: canvasStartBPM
-                        color: '#d8d8d8'
+                        color: "#d8d8d8"
                   }
                   Label {
                         id: canvasEndBPM
-                        color: '#d8d8d8'
+                        color: "#d8d8d8"
                   }
             } //end of Canvas
 
@@ -421,40 +421,42 @@ MuseScore {
                   model: ListModel {
                         id: beatBaseList
                         //mult is a tempo-multiplier compared to a crotchet      
-                        //ListElement { text: '\uECA0';               mult: 8     ; sym: '<sym>metNoteDoubleWhole</sym>' } // 2/1
-                        ListElement { text: '\uECA2';               mult: 4     ; sym: '<sym>metNoteWhole</sym>' } // 1/1
-                        //ListElement { text: '\uECA3 \uECB7 \uECB7'; mult: 3.5   ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/2..
-                        ListElement { text: '\uECA3 \uECB7';        mult: 3     ; sym: '<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym>' } // 1/2.
-                        ListElement { text: '\uECA3';               mult: 2     ; sym: '<sym>metNoteHalfUp</sym>' } // 1/2
-                        ListElement { text: '\uECA5 \uECB7 \uECB7'; mult: 1.75  ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/4..
-                        ListElement { text: '\uECA5 \uECB7';        mult: 1.5   ; sym: '<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym>' } // 1/4.
-                        ListElement { text: '\uECA5';               mult: 1     ; sym: '<sym>metNoteQuarterUp</sym>' } // 1/4
-                        ListElement { text: '\uECA7 \uECB7 \uECB7'; mult: 0.875 ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } // 1/8..
-                        ListElement { text: '\uECA7 \uECB7';        mult: 0.75  ; sym: '<sym>metNote8thUp</sym><sym>metAugmentationDot</sym>' } // 1/8.
-                        ListElement { text: '\uECA7';               mult: 0.5   ; sym: '<sym>metNote8thUp</sym>' } // 1/8
-                        ListElement { text: '\uECA9 \uECB7 \uECB7'; mult: 0.4375; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>' } //1/16..
-                        ListElement { text: '\uECA9 \uECB7';        mult: 0.375 ; sym: '<sym>metNote16thUp</sym><sym>metAugmentationDot</sym>' } //1/16.
-                        ListElement { text: '\uECA9';               mult: 0.25  ; sym: '<sym>metNote16thUp</sym>' } //1/16
+                        //ListElement { text: "\uECA0";               mult: 8     ; sym: "<sym>metNoteDoubleWhole</sym>" } // 2/1
+                        ListElement { text: "\uECA2";               mult: 4     ; sym: "<sym>metNoteWhole</sym>" } // 1/1
+                        //ListElement { text: "\uECA3 \uECB7 \uECB7"; mult: 3.5   ; sym: "<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>" } // 1/2..
+                        ListElement { text: "\uECA3 \uECB7";        mult: 3     ; sym: "<sym>metNoteHalfUp</sym><sym>metAugmentationDot</sym>" } // 1/2.
+                        ListElement { text: "\uECA3";               mult: 2     ; sym: "<sym>metNoteHalfUp</sym>" } // 1/2
+                        ListElement { text: "\uECA5 \uECB7 \uECB7"; mult: 1.75  ; sym: "<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>" } // 1/4..
+                        ListElement { text: "\uECA5 \uECB7";        mult: 1.5   ; sym: "<sym>metNoteQuarterUp</sym><sym>metAugmentationDot</sym>" } // 1/4.
+                        ListElement { text: "\uECA5";               mult: 1     ; sym: "<sym>metNoteQuarterUp</sym>" } // 1/4
+                        ListElement { text: "\uECA7 \uECB7 \uECB7"; mult: 0.875 ; sym: "<sym>metNote8thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>" } // 1/8..
+                        ListElement { text: "\uECA7 \uECB7";        mult: 0.75  ; sym: "<sym>metNote8thUp</sym><sym>metAugmentationDot</sym>" } // 1/8.
+                        ListElement { text: "\uECA7";               mult: 0.5   ; sym: "<sym>metNote8thUp</sym>" } // 1/8
+                        ListElement { text: "\uECA9 \uECB7 \uECB7"; mult: 0.4375; sym: "<sym>metNote16thUp</sym><sym>metAugmentationDot</sym><sym>metAugmentationDot</sym>" } //1/16..
+                        ListElement { text: "\uECA9 \uECB7";        mult: 0.375 ; sym: "<sym>metNote16thUp</sym><sym>metAugmentationDot</sym>" } //1/16.
+                        ListElement { text: "\uECA9";               mult: 0.25  ; sym: "<sym>metNote16thUp</sym>" } //1/16
                   }
                   currentIndex: 5
                   implicitHeight: 42
                   style: ComboBoxStyle {
-                        textColor: '#000000'
-                        selectedTextColor: '#000000'
-                        font.family: 'MScore Text'
+                        textColor: "#000000"
+                        selectedTextColor: "#000000"
+                        font.family: "MScore Text"
                         font.pointSize: 18
                         padding.top: 5
                         padding.bottom: 5
                   }
                   onCurrentIndexChanged: { // update the value fields to match the new beatBase
+                        console.log("beatBaseList:", beatBaseList, "beatBase.model:" , beatBase.model, "currentIndex:", currentIndex, "previousBeatIndex:", previousBeatIndex);
+                        if (!beatBaseList || beatBase.model === 1) return;
                         var changeFactor = beatBase.model.get(currentIndex).mult / beatBase.model.get(previousBeatIndex).mult;
-                        if (startBPMvalue.text == "") {
+                        if (startBPMvalue.text === "") {
                               startBPMvalue.placeholderText = Math.round(getFloatFromInput(startBPMvalue) / changeFactor * 10) / 10;
                         }
                         else {
                               startBPMvalue.text = Math.round(getFloatFromInput(startBPMvalue) / changeFactor * 10) / 10;
                         }
-                        if (endBPMvalue.text == "") {
+                        if (endBPMvalue.text === "") {
                               endBPMvalue.placeholderText = Math.round(getFloatFromInput(endBPMvalue) / changeFactor * 10) / 10;
                         }
                         else {
@@ -469,7 +471,7 @@ MuseScore {
             }
             TextField {
                   id: startBPMvalue
-                  placeholderText: '120'
+                  placeholderText: "120"
                   validator: DoubleValidator { bottom: 1;/* top: 512;*/ decimals: 1; notation: DoubleValidator.StandardNotation; }
                   implicitHeight: 24
                   onTextChanged: { canvas.requestPaint(); }
@@ -480,7 +482,7 @@ MuseScore {
             }
             TextField {
                   id: endBPMvalue
-                  placeholderText: '60'
+                  placeholderText: "60"
                   validator: DoubleValidator { bottom: 1;/* top: 512;*/ decimals: 1; notation: DoubleValidator.StandardNotation; }
                   implicitHeight: 24
                   onTextChanged: { canvas.requestPaint(); }
@@ -521,10 +523,10 @@ MuseScore {
                         groove: Rectangle { //background
                               id: grooveRect
                               implicitHeight: 6
-                              color: (enabled) ? '#555555' : '#565656'
+                              color: (enabled) ? "#555555" : "#565656"
                               radius: implicitHeight
                               border {
-                                    color: '#888888'
+                                    color: "#888888"
                                     width: 1
                               }
                               
@@ -532,18 +534,18 @@ MuseScore {
                                     //value fill
                                     implicitHeight: grooveRect.implicitHeight
                                     implicitWidth: styleData.handlePosition
-                                    color: (enabled) ? '#abd3fb' : '#567186'
+                                    color: (enabled) ? "#abd3fb" : "#567186"
                                     radius: grooveRect.radius
                                     border {
-                                          color: '#888888'
+                                          color: "#888888"
                                           width: 1
                                     }
                               }
                         }
                         handle: Rectangle {
                               anchors.centerIn: parent
-                              color: (enabled) ? (control.pressed ? '#ffffff': '#d8d8d8') : '#565656'
-                              border.color: '#666666'
+                              color: (enabled) ? (control.pressed ? "#ffffff": "#d8d8d8") : "#565656"
+                              border.color: "#666666"
                               border.width: 1
                               implicitWidth: 16
                               implicitHeight: 16
@@ -575,7 +577,7 @@ MuseScore {
 
                         enabled: !curveType.isLinear
                   }
-                  Label { text: '%' }
+                  Label { text: "%" }
             }
 
             Button {
